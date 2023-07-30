@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import "./Carousel.css";
 
 const CarouselCard = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0); 
 
   const slides = [
 
