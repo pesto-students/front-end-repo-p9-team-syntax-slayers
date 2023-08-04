@@ -28,7 +28,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
         <Card
           key={""}
           size={"sm"}
-          maxW={"500px"}
+          maxW={"600px"}
           maxH={"100px"}
           variant={"outline" }
           borderRadius={"15px"}
@@ -45,6 +45,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
                 <Text fontSize={"sm"}>Duration :{duration}m</Text>
                 <Text fontSize={"sm"}>Rs.{price}</Text>
               </VStack>
+              {/* based on the cart we will decide the logic of showing icons + and - */}
               <GrAddCircle size={"30px"} style={{ opacity: 0.8 }} />
             </HStack>
           </CardBody>

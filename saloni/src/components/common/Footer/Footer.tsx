@@ -3,7 +3,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <Box as="footer" mt={10} py={6} bg="primary" color={'grey'}>
+  <Box as="footer" mt={10} bottom={0} py={6} bg="primary" color={'grey'}>
       <VStack spacing={3} align="center">
         <HStack spacing={{base:7,md:9}}>
           <Link href="/terms" fontSize={{base:10, md:14}}>Terms and Conditions</Link>

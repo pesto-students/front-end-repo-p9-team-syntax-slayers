@@ -7,9 +7,6 @@ import {
   Flex,
   HStack,
   Stack,
-  CardBody,
-  CardFooter,
-  Button,
   Card,
   Divider,
 } from "@chakra-ui/react";
@@ -24,7 +21,7 @@ interface BookingCardProps{
   bookingDate:string,
   bookingTime:string,
   pricePaid:string,
-  services?:[],
+  services?:string[],
 }
 
 const BookingCard:React.FC<BookingCardProps> = (props) => {
@@ -35,7 +32,7 @@ const BookingCard:React.FC<BookingCardProps> = (props) => {
         direction={"row"}
         overflow="hidden"
         variant="outline"
-        maxW={"450px"}
+        maxW={"650px"}
         maxH={"140px"}
         m={'5'}
         alignItems={'center'}
