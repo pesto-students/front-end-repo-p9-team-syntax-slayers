@@ -1,16 +1,30 @@
-import { HStack, Flex, Heading,useBreakpointValue, Box, Divider, Button } from "@chakra-ui/react";
-import SelectedServiceCard from "../../components/SelectedServiceCard/SelectedServiceCard";
+import { HStack,Text, Flex, Heading,useBreakpointValue, Box, Divider, Button } from "@chakra-ui/react";
+import SelectedServiceCard ,{SelectedServiceCardProps} from "../../components/SelectedServiceCard/SelectedServiceCard";
 import TotalCostAndDetails from "../../components/TotalCostAndDetails/TotalCostAndDetails";
 import DateSlots from "../../components/DateSlots/DateSlots";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SelectedServiceDummyList } from "../../components/SelectedServiceCard/Helper";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useNavigate } from "react-router-dom";
 
 const FinalSelection = () => {
   
   const view = useBreakpointValue({ base: "360px", sm: "400px" })
+  const navigate = useNavigate()
 
-  const [selectedServiceList, setSelectServiceList] = useState([]);
+  const [selectedServiceList, setSelectServiceList] = useState<SelectedServiceCardProps[]>([]);
+  const cart = useAppSelector(state=>state.cart)
+  const dispatch = useAppDispatch();
 
+  useEffect(()=>{
+      console.log(cart.cartList)
+      setSelectServiceList(cart.cartList)
+    
+  },[cart.cartList])
+  
+  const handleGoBack=()=> {
+     navigate('/salonDetails')
+  }
   return (
     <> 
     <Box padding={{base:"5",sm:"10"}} pb={{sm:"0"}} overflowY={'auto'}>
@@ -23,9 +37,9 @@ const FinalSelection = () => {
       > 
      
         <Flex direction={"column"} mt={4}>
-          {/* we may use selectedServiceList or get values from redux sotre instead of SelectedServiceDummyList */}
-          {SelectedServiceDummyList.map((item, index) => {
-            return <SelectedServiceCard key={index} serviceName={item.serviceName} duration={item.duration} price={item.price} gender={item.gender} />;
+          {selectedServiceList.length==0 && <Flex direction={'column'} textAlign={'center'}> <Text fontSize={{base:"",sm:"30px"}}> Your cart is empty</Text> <Button mt={2} variant={'outline'} color={'accent.500'} onClick={handleGoBack} colorScheme={'accent.500'} >Go Back</Button> </Flex>}
+          {selectedServiceList.map((item, index) => {
+            return <SelectedServiceCard key={index} id={item.id} name={item.name} duration={item.duration} price={item.price} description={item.description}/>;
           })}
         </Flex>
         {view=="360px" && <DateSlots salonId="1"/> }

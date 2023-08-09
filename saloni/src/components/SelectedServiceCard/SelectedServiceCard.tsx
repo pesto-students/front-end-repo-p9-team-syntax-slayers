@@ -1,20 +1,50 @@
-import { Heading, Box, Card, CardBody, HStack, Text, VStack } from '@chakra-ui/react'
+import { Heading, Box, CircularProgress,Card, CardBody, HStack, Text, VStack } from '@chakra-ui/react'
 import { GrSubtractCircle } from "react-icons/gr";
-import React from 'react'
+import axios from 'axios';
+import React, {useState} from 'react'
+import { useAppDispatch } from '../../redux/hooks';
+import { removeFromList } from '../../redux/slices/cart';
 
-interface SelectedServiceCardProps{
-  serviceName:string
-  duration:string
-  price:string
-  gender:string
+export interface SelectedServiceCardProps{
+  created_at?: string;
+  description: string;
+  duration: number;
+  featured?: number;
+  id?: string;
+  is_active?: number;
+  name: string;
+  price: number;
+  salon_id?: string;
+  updated_at?: string;
 
 }
 const SelectedServiceCard:React.FC<SelectedServiceCardProps> = (props) => {
     
-  const {serviceName,duration,price,gender} = props 
+  const {name,duration,price, description,id} = props 
+  const dispatch = useAppDispatch()
+  const [loader,setLoader]=useState(false)
+
 
   const handleRemove=()=>{
-    console.log('removed')
+    console.log('removed',id)
+    setLoader(true)
+    const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_REMOVE_FROM_CART}`
+    const data={    "userId":"88109dd4-ec1b-4c44-9669-60b0e48f33c0",
+    "salonId":"69b991ae-912b-43e9-83f9-77f95e89c18b",
+    "serviceId":id}
+
+    console.log(apiEndpoint)
+    axios.post(apiEndpoint,data)
+    .then(response=>{
+      console.log(response)
+      dispatch(removeFromList(props))
+      setLoader(false)
+    })
+    .catch(error=>{
+      console.log(error)
+      setLoader(false)
+    })
+
   }
 
    return <>
@@ -31,11 +61,12 @@ const SelectedServiceCard:React.FC<SelectedServiceCardProps> = (props) => {
           <CardBody pl={"20px"} pr={"40px"}>
             <HStack justifyContent={"space-between"} spacing={3}>
             {/* <GrAddCircle size={"30px"} style={{ opacity: 0.8 }} /> */}
-            <GrSubtractCircle size={"30px"} style={{ opacity: 0.8 }} onClick={handleRemove}/>
+            {!loader &&<GrSubtractCircle size={"30px"} style={{ opacity: 0.8 }} onClick={handleRemove} cursor={'pointer'}/>}
+            {loader&&<CircularProgress isIndeterminate color='accent.300' size={'24px'} />}
               <VStack justifyContent={"center"} alignItems={"flex-start"} spacing={0}>
                 <HStack>
-                  <Heading size="sm"> {serviceName}</Heading>
-                  <Text fontSize={"xs"}>({gender})</Text>
+                  <Heading size="sm"> {name}</Heading>
+                  <Text fontSize={"xs"}>({description})</Text>
                 </HStack>
 
                 <Text fontSize={"sm"}>Duration :{duration}m</Text>

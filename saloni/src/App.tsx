@@ -7,11 +7,14 @@ import Navbar from "./components/common/Navbar/Navbar";
 import Footer from "./components/common/Footer/Footer";
 import FinalSelection from "./pages/finalSelection/FinalSelection";
 import UserProfile from "./pages/userProfile/UserProfile";
+import { Provider } from "react-redux";
+import {store} from './redux/store'
 import DashboardServices from "./pages/dashboardServices/DashboardServices"
 
 function App() {
   return (
-    <>
+    <> 
+       <Provider store={store}>
       <Router>
        <Navbar/>
         <Routes>
@@ -47,7 +50,7 @@ function App() {
         <Footer/>
       </Router>
       
-    
+      </Provider>
      
     </>
   );

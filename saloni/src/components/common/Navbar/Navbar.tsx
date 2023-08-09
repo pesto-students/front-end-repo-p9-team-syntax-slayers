@@ -1,13 +1,19 @@
 // Importing required dependencies
 import React, { useState } from "react";
 import "./Navbar.css";
-import { HamburgerIcon, SearchIcon ,} from "@chakra-ui/icons";
+import { HamburgerIcon, SearchIcon} from "@chakra-ui/icons";
+import LoginUser from "../Logins/LoginUser";
 import {
   Image,
   Text,
   Avatar,
   VStack,
   Portal,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalCloseButton,
   Button,
   Slide,
   Box,
@@ -17,14 +23,19 @@ import {
   HStack,useDisclosure, Heading,
 } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
+import LoginPartner from "../Logins/LoginPartner";
+import { useNavigate } from "react-router-dom";
 
 // Defining Navbar functional component
 const Navbar = () => {
   // Defining state variables for managing Navbar behavior
   const [hamburgerIconStatus, setHamburgerIconStatus] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [show, setShow] = useState(false);
   const { isOpen, onToggle } = useDisclosure()
+  const {isOpen:isLoginModalOpen,onToggle:onLoginModalToggle} = useDisclosure()
+  const {isOpen:isLoginModalForPartnerOpen, onToggle:onLoginModalForPartnerToggle} = useDisclosure()
+  const navigate = useNavigate()
 
   // Function to handle click event (opens and closes the menu)
   const handleClick = () => {
@@ -47,7 +58,9 @@ const Navbar = () => {
     console.log("searching..");
   };
 
-
+  const handleUserNavigation = (page:string)=>{
+    navigate(page)
+  }
   // The render of the component
   return (
     <>
@@ -89,17 +102,34 @@ const Navbar = () => {
         {!isLoggedIn && (
           <ul className={hamburgerIconStatus ? "menu-list" : "menu-list close"}>
             <li>
-              <NavLink to={"/"}>{"Register as Partner"}</NavLink>
+              <NavLink to={"/"} onClick={onLoginModalForPartnerToggle} >{"Register as Partner"}</NavLink>
             </li>
             <li>
-              <NavLink to={"/"}>{"About us"}</NavLink>
+              <NavLink to={"/"} onClick={onToggle}>{"About us"}</NavLink>
             </li>
             <li>
-              <NavLink to={"/"}>{"Login/Singup"}</NavLink>
+              <NavLink to={"/"} onClick={onLoginModalToggle}>{"Login/Singup"}</NavLink>
             </li>
           </ul>
         )}
-
+      <Modal onClose={onLoginModalToggle} size={{base:"full",sm:'2xl'}} isOpen={isLoginModalOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+        <ModalCloseButton />
+          <ModalBody p={0}>
+            <LoginUser/>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal onClose={onLoginModalForPartnerToggle} size={{base:"full",sm:'2xl'}} isOpen={isLoginModalForPartnerOpen} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+        <ModalCloseButton />
+          <ModalBody p={0}>
+            <LoginPartner/>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
         {/* if user is logged in */}
         {isLoggedIn && (
           <>
@@ -151,9 +181,9 @@ const Navbar = () => {
                           spacing="3"
                           onMouseLeave={() => setShow(false)}
                         >
-                          <Text>Profile</Text>
-                          <Text>Bookings</Text>
-                          <Text onClick={handleLogout} color={"accent.500"}>
+                          <Text onClick={()=>handleUserNavigation('/userProfile')} cursor={'pointer'}>Profile</Text>
+                          <Text onClick={()=>handleUserNavigation('/userProfile')} cursor={'pointer'}>Bookings</Text>
+                          <Text onClick={handleLogout} color={"accent.500"} cursor={'pointer'}>
                             Logout
                           </Text>
                         </VStack>

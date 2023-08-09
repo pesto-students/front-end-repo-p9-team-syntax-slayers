@@ -6,18 +6,22 @@ import {
   Flex,
   Divider,
   HStack,
+  Progress
 } from "@chakra-ui/react";
 import { AiFillStar } from "react-icons/ai";
 import React, { useEffect } from "react";
 import CarouselCard from "../../components/Carousel/Carousel";
 import { useState } from "react";
-import ServiceCard from "../../components/ServiceCard/ServiceCard";
+import ServiceCard, { ServiceCardProps } from "../../components/ServiceCard/ServiceCard";
 import ReviewCard from "../../components/ReviewCard/ReviewCard";
 import Cart from "../../components/Cart/Cart";
+import axios from 'axios';
 import {
   reviewDummyData,
   serviceListDummy,
 } from "../../components/ReviewCard/Helper"; 
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { addToList , emptyCart} from "../../redux/slices/cart";
 
 interface SalonDetailsProps{
 
@@ -25,14 +29,72 @@ interface SalonDetailsProps{
 
 const SalonDetails:React.FC<SalonDetailsProps> = (props) => {
   
-  const [serviceList, setServiceList] = useState([]);
+  const [serviceList, setServiceList] = useState<ServiceCardProps[]>([]);
+  const [filteredServiceList, setFilteredServiceList] = useState<ServiceCardProps[]>([]);
   const [reviewersList, setReviewersList] = useState([]);
   const [activeButton, setActiveButton] = useState("");
-  const [ratingNumber, setRatingNumber] = useState(0);
+  const [ratingNumber, setRatingNumber] = useState(0); 
+  const [loader, setLoader] = useState(false)
+
+  const cart = useAppSelector(state=>state.cart)
+  const dispatch = useAppDispatch();
 
   const handleButtonClick = (buttonName: string) => {
     setActiveButton(buttonName);
+    if(buttonName=='Featured'){
+      setFilteredServiceList(serviceList.filter(item=>item.featured==1));
+    }
+    else if(buttonName=='Hair'){
+      setFilteredServiceList(serviceList.filter(item=>item.name.toLocaleLowerCase().includes('hair')))
+    }
+    else if(buttonName=='MakeUp'){
+      setFilteredServiceList(serviceList.filter(item=>item.name.toLocaleLowerCase().includes('makeup')))
+    }else{
+      const words = ['massage', 'facial', 'cure']
+      setFilteredServiceList(serviceList.filter(item=> words.some(word=> item.name.toLocaleLowerCase().includes(word))))
+    }
   };
+  
+  useEffect(()=>{
+    setActiveButton('Featured')
+    setFilteredServiceList(serviceList.filter(item=>item.featured==1));
+  },[serviceList])
+   
+  useEffect(()=>{
+     
+    setLoader(true)
+    const salonId = '69b991ae-912b-43e9-83f9-77f95e89c18b';
+    const apiEndpoint1 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_GET_SALON_SERVICES}${salonId}`;  
+   // Make the GET request.
+    axios.get(apiEndpoint1)
+     .then(response => {
+      console.log(response.data.data)
+       setServiceList(response.data.data)
+       setLoader(false)
+     })
+     .catch(error => {
+       console.error('There has been a problem with our fetch operation:', error);
+       setLoader(false)
+     });
+
+          
+    const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_CART_LIST}${'88109dd4-ec1b-4c44-9669-60b0e48f33c0'}`;  
+    console.log(apiEndpoint2)
+   // Make the GET request.
+    axios.get(apiEndpoint2)
+     .then(response => {
+       const cartDataFromDB = response.data.data;
+       console.log(cartDataFromDB)
+       dispatch(emptyCart())
+       cartDataFromDB.map((item:ServiceCardProps)=>{
+        dispatch(addToList(item))
+       })
+       
+     })
+     .catch(error => {
+       console.error('There has been a problem with your fetch operation:', error);
+     });
+  },[])
 
   useEffect(() => {
     let sum = 0;
@@ -45,10 +107,10 @@ const SalonDetails:React.FC<SalonDetailsProps> = (props) => {
     {
       /* instead of reviewDummyData we will use reviewersList here */
     }
-    setRatingNumber(sum / reviewDummyData.length);
+    setRatingNumber(sum / reviewDummyData.length);     
   }, []);
-  return (
-    <>
+  return (    
+    <> 
       <Flex direction={"column"} bg={"primary"}>
         <HStack spacing={12} ml={6}>
           <Text color={"white"}>Salon NAme</Text>{" "}
@@ -135,22 +197,29 @@ const SalonDetails:React.FC<SalonDetailsProps> = (props) => {
         <Divider mt={3} width={{ sm: "30%" }} />
         <Flex direction={{ base: "column", sm: "row" }}>
           <Box width={{ base: "100%", sm: "70%" }}>
+         {loader && <Progress size='xs' color={'accent.500'} isIndeterminate />}
             {/* instead of serviceListDummy list we will use here serviceList */}
-            {serviceListDummy.map((item, index) => {
-              return (
-                <ServiceCard
-                  key={index}
-                  serviceName={item.serviceName}
-                  duration={item.duration}
-                  price={item.price}
-                  gender={item.gender}
-                />
-              );
-            })}
+            {!loader&& filteredServiceList.map((item, index) => {
+    return (
+        <ServiceCard
+            key={item.id} // It's better to use unique value 'id' for key if available instead of the array index
+            name={item.name}
+            duration={item.duration}
+            price={item.price}
+            description={item.description}
+            created_at={item.created_at}
+            featured={item.featured}
+            id={item.id}
+            is_active={item.is_active}
+            salon_id={item.salon_id}
+            updated_at={item.updated_at}
+        />
+    );
+})}
+
           </Box>
           <Cart />
         </Flex>
-
         <Box ml={4} mt={20}>
           <Heading fontSize={"xl"} mb={3}>
             {" "}
