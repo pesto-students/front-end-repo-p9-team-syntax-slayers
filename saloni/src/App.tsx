@@ -10,6 +10,7 @@ import UserProfile from "./pages/userProfile/UserProfile";
 import { Provider } from "react-redux";
 import {store} from './redux/store'
 import DashboardServices from "./pages/dashboardServices/DashboardServices"
+import PrivateRoute from "./components/common/PrivateRoute/PrivateRoute"
 
 function App() {
   return (
@@ -27,24 +28,32 @@ function App() {
           <Route
             path="/salonDetails"
             element={
+              <PrivateRoute>
               <SalonDetails/>
+              </PrivateRoute>
             }
           />
           <Route
             path="/finalSelection"
             element={
-              <FinalSelection/>          
+              <PrivateRoute>
+              <FinalSelection/>   
+              </PrivateRoute>       
             }
           />
           <Route
           path="/userProfile"
           element={
+            <PrivateRoute>
             <UserProfile/>
+            </PrivateRoute>
           }/>
           <Route 
-          path="dashboardService"
+          path="/dashboardService"
           element={
+            <PrivateRoute>
             <DashboardServices/>
+            </PrivateRoute>
           }/>
         </Routes>
         <Footer/>

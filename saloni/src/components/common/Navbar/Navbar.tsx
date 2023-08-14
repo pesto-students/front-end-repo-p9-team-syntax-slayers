@@ -1,5 +1,5 @@
 // Importing required dependencies
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Navbar.css";
 import { HamburgerIcon, SearchIcon} from "@chakra-ui/icons";
 import LoginUser from "../Logins/LoginUser";
@@ -25,23 +25,35 @@ import {
 import { NavLink } from "react-router-dom";
 import LoginPartner from "../Logins/LoginPartner";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks/index";
+import { removeToken, setToken } from "../../../redux/slices/user";
 
 // Defining Navbar functional component
 const Navbar = () => {
   // Defining state variables for managing Navbar behavior
   const [hamburgerIconStatus, setHamburgerIconStatus] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [show, setShow] = useState(false);
   const { isOpen, onToggle } = useDisclosure()
   const {isOpen:isLoginModalOpen,onToggle:onLoginModalToggle} = useDisclosure()
   const {isOpen:isLoginModalForPartnerOpen, onToggle:onLoginModalForPartnerToggle} = useDisclosure()
   const navigate = useNavigate()
+  const user = useAppSelector(state=>state.user)
+  const dispatch = useAppDispatch();
+  // const [isLoggedIn, setIsLoggedIn] = useState(user.isLoggedIn);
 
   // Function to handle click event (opens and closes the menu)
   const handleClick = () => {
     setHamburgerIconStatus(!hamburgerIconStatus);
   };
-
+  
+  const handleSuccessfulLoginUser = () => {
+    onLoginModalToggle();  // Close the login modal
+    dispatch(setToken())
+  };
+  const handleSuccessfulLoginPartner = () => {
+    onLoginModalForPartnerToggle();  // Close the login modal
+    dispatch(setToken())
+  };
   // Function to handle profile button click event (toggle profile dropdown)
   const handleProfile = () => {
     console.log("profile");
@@ -51,6 +63,7 @@ const Navbar = () => {
   //Function to handle logout of user
   const handleLogout = () => {
     console.log("logout");
+    dispatch(removeToken())
   };
 
   //Function to handle user search input in navbar
@@ -62,6 +75,11 @@ const Navbar = () => {
     navigate(page)
   }
   // The render of the component
+  useEffect(()=>{
+    dispatch(setToken())
+    user.userType=='salon_admin'? navigate('/dashboardService'):navigate('/')
+  },[user])
+  console.log(user)
   return (
     <>
       <nav>
@@ -69,7 +87,7 @@ const Navbar = () => {
         <HStack spacing={8}>
           <Image src="/logo-no-background.png" alt="logo" height={"10"} />
           {/* Only show search box if a user is logged in. This is determined by isLoggedIn state */}
-          {isLoggedIn && (
+          {user.isLoggedIn && (
             <InputGroup
               maxW={{ base: "210px", sm: "lg" }}
               justifyContent={"center"}
@@ -99,7 +117,7 @@ const Navbar = () => {
 
         {/* Display different menu options based on login status */}
         {/* if user is not logged in */}
-        {!isLoggedIn && (
+        {!user.isLoggedIn && (
           <ul className={hamburgerIconStatus ? "menu-list" : "menu-list close"}>
             <li>
               <NavLink to={"/"} onClick={onLoginModalForPartnerToggle} >{"Register as Partner"}</NavLink>
@@ -117,7 +135,7 @@ const Navbar = () => {
         <ModalContent>
         <ModalCloseButton />
           <ModalBody p={0}>
-            <LoginUser/>
+            <LoginUser handleSuccessfulLoginUser={handleSuccessfulLoginUser} />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -126,12 +144,12 @@ const Navbar = () => {
         <ModalContent>
         <ModalCloseButton />
           <ModalBody p={0}>
-            <LoginPartner/>
+            <LoginPartner handleSuccessfulLoginPartner={handleSuccessfulLoginPartner} />
           </ModalBody>
         </ModalContent>
       </Modal>
         {/* if user is logged in */}
-        {isLoggedIn && (
+        {user.isLoggedIn && (
           <>
             <ul
               className={hamburgerIconStatus ? "menu-list" : "menu-list close"}

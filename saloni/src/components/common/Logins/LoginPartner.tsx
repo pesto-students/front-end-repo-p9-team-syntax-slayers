@@ -1,12 +1,22 @@
 import { Button, Flex, Text, ListItem, UnorderedList, Image, Input, Box, Link } from '@chakra-ui/react';
 import React, { useState } from 'react';
+import axios from 'axios';
+import {useNavigate} from "react-router-dom"
 
-const LoginPartner = () => {
+interface LoginPartnerProps {
+  handleSuccessfulLoginPartner: () => void; // The function type
+}
+
+
+const LoginPartner:React.FC<LoginPartnerProps> = ({handleSuccessfulLoginPartner}) => {
   const [loginPartner, setLoginPartner] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState(''); 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [error , setError]=useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   const handleToggle = () => {
     setLoginPartner(!loginPartner);
@@ -16,8 +26,52 @@ const LoginPartner = () => {
     e.preventDefault();
 
     if (loginPartner) {
+      setIsLoading(true)
+      const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_LOGIN_USER}`;
+      console.log(apiEndpoint, email, password);
+      axios
+        .post(apiEndpoint, { email, password })
+        .then((res) => {
+          console.log(res);
+          setError(false);
+          localStorage.setItem("token", res.data.data.token);
+          handleSuccessfulLoginPartner();
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(true);
+          setIsLoading(false)
+          console.log(err.response.data.message);
+        });
       console.log('Logging in as partner with', email, password);
     } else {
+      setIsLoading(true)
+      const payload = {
+        firstname: firstName,
+        lastname: lastName,
+        email,
+        password,
+        type: "salon_admin",
+      };
+      console.log(payload)
+      const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_REGISTER_USER}`;
+      console.log(apiEndpoint2, email, password, firstName, lastName);
+      axios
+        .post(apiEndpoint2, payload)
+
+        .then((res) => {
+          console.log(res);
+          setError(false);
+          setLoginPartner(true)
+          setIsLoading(false)
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(true);
+          setIsLoading(false)
+          console.log(err.response.data.message);
+        });
       console.log('Signing up as partner with', firstName, lastName, email, password);
     }
   };
@@ -102,8 +156,12 @@ const LoginPartner = () => {
             w={'80%'}
             variant={'unstyled'}
           />
-
-          <Button type="submit" variant={'outline'} color={'accent.500'} colorScheme={'accent.500'} w={'70%'}>{loginPartner ? "Login" : "Sign Up"}</Button>
+          {error && (
+            <Text fontSize={"xs"} color={"red"}>
+              Incorrect password
+            </Text>
+          )}
+          <Button isLoading={isLoading} type="submit" variant={'outline'} color={'accent.500'} colorScheme={'accent.500'} w={'70%'}>{loginPartner ? "Login" : "Sign Up"}</Button>
 
           {loginPartner ? (
             <Box w="80%" textAlign="right">
