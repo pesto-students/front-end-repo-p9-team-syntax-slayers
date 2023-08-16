@@ -1,61 +1,53 @@
-import {
-  Box,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Image,
-  Divider,
-  Stack,
-  Heading,
-  Text,
-  Button,
-} from "@chakra-ui/react";
-import React from "react";
+import { Box, Card, CardBody, Image, Heading, Text } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import React from 'react';
 
 interface TreatmentCardProps {
   imageUrl: string;
-  serviceName: String;
-  desciption?: string;
+  serviceName: string;
+  description?: string;
 }
 
 const TreatmentCard: React.FC<TreatmentCardProps> = (props) => {
-  //Destructuring props
-  const { imageUrl, serviceName, desciption } = props;
-  
+  const { imageUrl, serviceName, description } = props;
+
   return (
     <>
-      <Box
-        as={Card}
-        direction={"row"}
-        maxW={"230px"}
-        minW={"190px"}
-        minH={"150px"}
-        margin="9px"
-        borderRadius={"10px"}
-      >
-        <Image
-          objectFit="cover"
-          maxW={"110px"}
-          borderTopLeftRadius={{ base: "xl", sm: "xl" }}
-          borderBottomLeftRadius={{ base: "xl", sm: "xl" }}
-          src={imageUrl}
-          alt="Caffe Latte"
-        />
-
-        <CardBody
-          display={"flex"}
-          justifyContent={"center"}
-          flexDirection={"column"}
+      <motion.div whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}>
+        <Card
+          direction={['column', 'row']}
+          maxW={{ base: '100%', sm: '230px' }}
+          minW={{ base: '100%', sm: '190px' }}
+          borderRadius={'10px'}
+          _hover={{ cursor: 'pointer' }}
+          margin="9px"
+          overflow="hidden"
         >
-          <Box>
-            <Heading size="xs">{serviceName}</Heading>
-            <Text fontSize={"xs"} mt={"5px"}>
-              {desciption}
-            </Text>
-          </Box>
-        </CardBody>
-      </Box>
+          <Image
+            objectFit="cover"
+            maxW={['100%', '110px']}
+            borderTopLeftRadius={['xl', 'xl']}
+            borderBottomLeftRadius={['xl', 'xl']}
+            src={imageUrl}
+            alt="Treatment Image"
+          />
+
+          <CardBody
+            display="flex"
+            flexDirection={['column', 'row']}
+            justifyContent="center"
+            alignItems={['flex-start', 'center']}
+            flex="1"
+          >
+            <Box>
+              <Heading size="xs">{serviceName}</Heading>
+              <Text fontSize="xs" mt={['5px', '0']}>
+                {description}
+              </Text>
+            </Box>
+          </CardBody>
+        </Card>
+      </motion.div>
     </>
   );
 };

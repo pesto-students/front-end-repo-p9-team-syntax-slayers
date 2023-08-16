@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Box,
@@ -13,37 +13,38 @@ import {
   MenuList,
   MenuItem,
   ScaleFade,
+  Text,
+  HStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-import { SearchIcon, ChevronDownIcon } from '@chakra-ui/icons';
+import { SearchIcon, ChevronDownIcon, StarIcon } from '@chakra-ui/icons';
 import instance from '../../API';
+import { GiPathDistance } from 'react-icons/gi';
+import GenderBtn from '../Buttons/GenderBtn';
+import LocationDropdown from '../LocationDropDown/LocationDropDown';
 
 interface City {
   id: string;
   name: string;
 }
 
+interface coordinations {
+  lat: number;
+  lon: number;
+}
 interface SearchLocationBarProps {
   city: string;
+  lat: number;
+  lon: number;
   dropdownOptions: City[];
   onCitySelect?: (id: string) => void;
   onSearchQueryChange: (value: string) => void;
-  // selectedLocation: LatLngTuple | null;
-  // handleLocationSelect: (lat: number, lon: number) => void;
-  // handleLocationChange: (lat: number, lon: number) => void;
 }
 
 const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
-  const {
-    city,
-    dropdownOptions,
-    onCitySelect,
-    onSearchQueryChange,
-    // selectedLocation,
-    // handleLocationChange,
-    // handleLocationSelect,
-  } = props;
+  const { city, lat, lon, dropdownOptions, onCitySelect, onSearchQueryChange } =
+    props;
 
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -53,18 +54,40 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
 
   const [isSearchResultsVisible, setIsSearchResultsVisible] = useState(false); // State to control animation visibility
 
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setIsSearchResultsVisible(false);
+    };
+
+    window.addEventListener('click', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   const handleSearch = async () => {
     try {
-      ('/salon/searchNearBySalons?lon=77.5822&lat=12.9299&searchKeyWord=glamoures');
       const response = await instance.get(
-        `${process.env.REACT_APP_BASEURL}/salon/searchNearBySalons?lon=77.5822&lat=12.9299&searchKeyWord=${searchQuery}`,
+        `${process.env.REACT_APP_BASEURL}salon/searchNearBySalons?lon=${lon}&lat=${lat}&searchKeyWord=${searchQuery}`,
       );
-      const salons = response.data;
+      const salons = response?.data?.data;
 
-      setSearchResults(salons);
-      setIsSearchResultsVisible(true); // Show animation when search results are visible
+      if (salons) {
+        setSearchResults(salons);
+        setIsSearchResultsVisible(true);
+      }
+      setIsSearchResultsVisible(true);
     } catch (error) {
       console.error('Error fetching salons:', error);
+    }
+  };
+
+  const handleEnterKeyPress = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key === 'Enter') {
+      handleSearch();
     }
   };
 
@@ -89,7 +112,13 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
       boxShadow="lg"
     >
       <Box padding={5}>
-        <Menu>
+        <LocationDropdown
+          city={city}
+          dropdownOptions={dropdownOptions}
+          onCitySelect={onCitySelect}
+        />
+
+        {/* <Menu>
           <MenuButton
             as={Button}
             colorScheme="white"
@@ -114,7 +143,7 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
               </MenuItem>
             ))}
           </MenuList>
-        </Menu>
+        </Menu> */}
       </Box>
 
       <InputGroup
@@ -133,6 +162,7 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
           borderRadius={'3px'}
           borderColor={'grey'}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyPress={handleEnterKeyPress}
         />
       </InputGroup>
 
@@ -151,16 +181,45 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
       {/* Animate the search results */}
       {isSearchResultsVisible && (
         <ScaleFade in={isSearchResultsVisible} initialScale={0.9}>
-          <Box mt={4}>
-            <ul>
-              {searchResults.map((result) => (
-                <li key={result.id}>
-                  <MenuItem onClick={() => handleSalonClick(result.id)}>
-                    {result.name} - Distance: {result.distance}
-                  </MenuItem>
-                </li>
-              ))}
-            </ul>
+          <Box
+            mt={4}
+            position={'absolute'}
+            left={['-20px', '220px']}
+            top={['190px', '60px']}
+            bg={'secondary'}
+            p={'10px'}
+            zIndex={1000}
+          >
+            {searchResults.map((result) => (
+              <Box
+                key={result.id}
+                p={4}
+                borderRadius="md"
+                boxShadow="md"
+                cursor="pointer"
+                onClick={() => handleSalonClick(result.id)}
+                _hover={{ bg: 'gray.100' }}
+                w={['390px']}
+                zIndex={1000}
+              >
+                <HStack justifyContent={'space-between'}>
+                  <HStack>
+                    <Text fontWeight="semibold">{result.name}</Text>
+                  </HStack>
+                  <HStack>
+                    <StarIcon color="gold" />{' '}
+                    <Text fontSize="sm">{result.rating}</Text>
+                  </HStack>
+
+                  <HStack>
+                    <Text color="gray.600">
+                      <GiPathDistance /> {result.distance.toFixed(2)} Kms
+                    </Text>
+                  </HStack>
+                  <GenderBtn> {result.gender} </GenderBtn>
+                </HStack>
+              </Box>
+            ))}
           </Box>
         </ScaleFade>
       )}
