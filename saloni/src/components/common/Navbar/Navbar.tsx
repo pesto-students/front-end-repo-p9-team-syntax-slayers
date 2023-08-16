@@ -86,6 +86,7 @@ const Navbar = () => {
     navigate(page);
   };
   // The render of the component
+<<<<<<< HEAD
   useEffect(() => {
     dispatch(setToken());
     user.userType == 'salon_admin'
@@ -93,6 +94,13 @@ const Navbar = () => {
       : navigate('/');
   }, [user]);
   console.log(user);
+=======
+  useEffect(()=>{
+    dispatch(setToken())
+  //  user.userType=='salon_admin'? navigate('/dashboardService'):navigate('/')
+  },[user])
+  console.log(user)
+>>>>>>> 011513f (crud operation on dashboard)
   return (
     <>
       <nav>
@@ -215,7 +223,7 @@ const Navbar = () => {
                     onClick={handleProfile}
                   >
                     <Avatar
-                      name="Sidhanth Kamble"
+                      name={user.firstName}
                       src="https://bit.ly/broken-link"
                       size={'sm'}
                       onClick={() => setShow(!show)}

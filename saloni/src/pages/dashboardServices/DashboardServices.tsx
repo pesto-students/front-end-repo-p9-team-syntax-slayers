@@ -1,14 +1,16 @@
-import { Heading, Flex, Button, Box, Text, HStack } from "@chakra-ui/react";
+import { Heading, Flex, Button,useToast, Box, Text, HStack,Image, VStack, FormControl, FormLabel,Input } from "@chakra-ui/react";
 import CrudServices from "../../components/CrudServices/CrudServices";
 import React, { useState } from "react";
 import DashboardTable from "../../components/DashboardTable/DashboardTable";
 import DashboardBookingDetailsCard from "../../components/DashboardBookingDetailsCard/DashboardBookingDetailsCard";
 import { dummyData } from "../../components/DashboardBookingDetailsCard/Helper";
 import TimeSlots from "../../components/TimeSlots/TimeSlots";
+import CrudSalon from "../../components/CrudSalon/CrudSalon";
 
 enum ServiceAction {
   SERVICES = "services",
   BOOKINGS = "bookings",
+  SALONDETAILS = "salonDetails"
 }
 
 const dashboardServices = () => {
@@ -32,14 +34,28 @@ const dashboardServices = () => {
           w={{ base: "350px", sm: "500px" }}
           alignItems={"center"}
           justifyContent={"center"}
-        >
-          <Button
+        > 
+           <Button
             w={"full"}
             bg={"primary"}
             borderRightRadius={0}
             color={
+              activeButton == ServiceAction.SALONDETAILS ? "accent.500" : "white"
+            }
+            fontSize={{base:'16',sm:'18'}}
+            onClick={() => handleActiveButtons(ServiceAction.SALONDETAILS)}
+          >
+            Salon Details
+          </Button>
+          <Button
+            w={"full"}
+            bg={"primary"}
+            borderRadius={0}
+            color={
               activeButton == ServiceAction.SERVICES ? "accent.500" : "white"
             }
+            m={0.3}
+            fontSize={{base:'16',sm:'18'}}
             onClick={() => handleActiveButtons(ServiceAction.SERVICES)}
           >
             Service
@@ -51,11 +67,17 @@ const dashboardServices = () => {
             color={
               activeButton == ServiceAction.BOOKINGS ? "accent.500" : "white"
             }
+            fontSize={{base:'16',sm:'18'}}
             onClick={() => handleActiveButtons(ServiceAction.BOOKINGS)}
           >
             Bookings
           </Button>
         </Flex>
+        {ServiceAction.SALONDETAILS === activeButton && (
+            <>
+               <CrudSalon userId="1"/>
+            </>
+    )}
         {ServiceAction.SERVICES == activeButton && (
           <>
             <CrudServices salonId="1" />

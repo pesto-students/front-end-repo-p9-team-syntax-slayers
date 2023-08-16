@@ -13,7 +13,7 @@ interface PrivateRouteProps {
       return <Navigate to="/" />;
       
     }
-  
+
     return <>{children}</>;
   };
   
