@@ -41,6 +41,9 @@ function App() {
         );
 
         if (geoAddress) {
+          if(geoAddress.city=='Bengaluru')
+           geoAddress.city='Bangalore'
+           console.log(geoAddress)
           dispatch(
             setGeoAddress({
               formatted: geoAddress.formatted,
