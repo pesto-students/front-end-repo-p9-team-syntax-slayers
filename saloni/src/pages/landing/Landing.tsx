@@ -243,6 +243,7 @@ const Landing = () => {
                     <ScrollableCardList cardWidth="500px" visibleCards={3}>
                       {exploreSalons.map((salon) => (
                         <SalonCard
+                          id={salon.id}
                           key={salon.id}
                           salonName={salon.name}
                           rating={salon.rating.toString()}

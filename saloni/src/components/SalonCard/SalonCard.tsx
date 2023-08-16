@@ -14,6 +14,8 @@ import { StarIcon } from '@chakra-ui/icons';
 import { GiPathDistance } from 'react-icons/gi';
 import { GrLocation } from 'react-icons/gr';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+
 import GenderBtn from '../Buttons/GenderBtn';
 
 interface SalonCardProps {
@@ -31,6 +33,7 @@ interface SalonCardProps {
 
 const SalonCard: React.FC<SalonCardProps> = (props) => {
   const {
+    id,
     salonName,
     rating,
     distance,
@@ -40,18 +43,22 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
     statusClose,
   } = props;
 
-  const handleCardClick = (e: any) => {
-    console.log('Card clicked', e.target);
+  const history = useNavigate();
+
+  const handleCardClick = () => {
+    history(`/salonDetails/${id}`);
   };
 
   return (
     <motion.div whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}>
       <Card
+        key={id}
         direction={{ base: 'row', sm: 'column' }}
-        minW={['170px', '350px']}
-        maxW={['240px', '350px']}
+        onClick={handleCardClick}
+        minW={['280px', '280px']}
+        maxW={['350px', '300px']}
         minH={['200px', '300px']}
-        maxH={['200px', '300px']}
+        maxH={['200px', '310px']}
         opacity={statusClose ? 0.7 : 1}
         margin={['9px']}
         _hover={{ opacity: 0.8, cursor: 'pointer' }}
@@ -60,7 +67,7 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
       >
         <Flex
           position="relative"
-          maxW={{ base: '180px', sm: '100%' }}
+          maxW={['100vw']}
           justifyContent="center"
           alignItems="center"
         >
