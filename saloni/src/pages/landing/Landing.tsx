@@ -32,6 +32,8 @@ import useGeolocation from '../../helper/geolocation';
 
 const Landing = () => {
   const [exploreSalons, setExploreSalons] = useState<Salon[]>([]);
+  const [upComingBookings, setUpComingBookings] = useState([]);
+
   const [exploreTreatments, setExploreTreatments] = useState<
     ExploreTreatment[]
   >([]);
@@ -40,6 +42,7 @@ const Landing = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const userLocation = useAppSelector((state) => state.user.userLocation);
+  const userToken = useAppSelector((state) => state.user.token);
 
   const geoCoding = useAppSelector((state) => state.user.GeoAddress);
   const dispatch = useAppDispatch();
@@ -57,7 +60,7 @@ const Landing = () => {
               lon: locationData.longitude || 0,
             }),
           );
-          console.log('userLocationEffect', userLocation);
+
           const geoAddress = await geocodeCoordinates(
             locationData.latitude || 0,
             locationData.longitude || 0,
@@ -113,7 +116,7 @@ const Landing = () => {
     };
 
     fetchData();
-  }, []);
+  }, [JSON.stringify(locationData)]);
 
   const handleCitySelect = async (selectedId: string) => {
     try {
@@ -169,8 +172,6 @@ const Landing = () => {
     }
   };
 
-  console.log('geoCoding', geoCoding);
-  console.log('userLocation', userLocation);
   const handleSearchQueryChange = (value: string) => {
     // Handle the search query change in the parent component
     console.log('Search query changed:', value);
