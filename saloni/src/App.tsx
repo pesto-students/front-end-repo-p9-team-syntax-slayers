@@ -17,10 +17,6 @@ import DashboardServices from './pages/dashboardServices/DashboardServices';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Landing from './pages/landing/Landing';
 import Listings from './pages/listings/Listings';
-import useGeolocation from './helper/geolocation';
-import { geocodeCoordinates } from './helper/geoCoding';
-import { useAppDispatch } from './redux/hooks';
-import { setGeoAddress, setUserLocation } from './redux/slices/user';
 
 function App() {
   return (
