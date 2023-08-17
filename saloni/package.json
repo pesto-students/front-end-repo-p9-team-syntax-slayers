@@ -61,5 +61,8 @@
     "eslint": "^8.45.0",
     "eslint-plugin-react": "latest",
     "husky": "^8.0.3"
+  },
+  "engines": {
+    "node": ">16"
   }
 }
