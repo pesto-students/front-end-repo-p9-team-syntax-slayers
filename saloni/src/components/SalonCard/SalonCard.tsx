@@ -15,8 +15,10 @@ import { GiPathDistance } from 'react-icons/gi';
 import { GrLocation } from 'react-icons/gr';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 
 import GenderBtn from '../Buttons/GenderBtn';
+
 
 interface SalonCardProps {
   id?: string;
@@ -46,19 +48,19 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
   const history = useNavigate();
 
   const handleCardClick = () => {
-    history(`/salonDetails/${id}`);
+      history(`/salonDetails/${id}`);
   };
 
   return (
     <motion.div whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}>
       <Card
         key={id}
-        direction={{ base: 'row', sm: 'column' }}
+        direction={{ base: 'column', sm: 'column' }}
         onClick={handleCardClick}
         minW={['280px', '280px']}
-        maxW={['350px', '300px']}
-        minH={['200px', '300px']}
-        maxH={['200px', '310px']}
+        maxW={['100%', '300px']}
+        minH={['300px', '300px']}
+        maxH={['300px', '310px']}
         opacity={statusClose ? 0.7 : 1}
         margin={['9px']}
         _hover={{ opacity: 0.8, cursor: 'pointer' }}
@@ -74,7 +76,6 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
           <Image
             src={imageUrl}
             minW={'100%'}
-            minH={'100%'}
             aspectRatio={15 / 8}
             alt="Green double couch with wooden legs"
             borderTopRadius={{ base: 'none', sm: 'xl' }}
@@ -110,7 +111,7 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
 
         <CardBody>
           <Flex
-            direction={{ base: 'column', md: 'row' }}
+            direction={{ base: 'row', md: 'row' }}
             alignItems={{ base: 'flex-start', md: 'center' }}
           >
             <Box flex="1">

@@ -78,7 +78,7 @@ const FinalSelection = () => {
         <Flex direction={"column"} mt={4}>
           {selectedServiceList.length==0 && <Flex direction={'column'} textAlign={'center'}> <Text fontSize={{base:"",sm:"30px"}}> Your cart is empty</Text> <Button mt={2} variant={'outline'} color={'accent.500'} onClick={handleGoBack} colorScheme={'accent.500'} >Go Back</Button> </Flex>}
           {selectedServiceList.map((item, index) => {
-            return <SelectedServiceCard key={index} id={item.id} name={item.name} duration={item.duration} price={item.price} description={item.description}/>;
+            return <SelectedServiceCard key={index} salon_id={item.salon_id} id={item.id} name={item.name} duration={item.duration} price={item.price} description={item.description}/>;
           })}
         </Flex>
         {view=="360px" && <DateSlots salonId="1"/> }

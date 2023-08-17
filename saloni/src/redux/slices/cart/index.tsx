@@ -3,10 +3,12 @@ import {ServiceCardProps} from "../../../components/ServiceCard/ServiceCard";
 
 interface CartState {
     cartList: ServiceCardProps[]
+    salonId?:string
   }
   
   const initialState: CartState = {
-    cartList: []
+    cartList: [],
+    salonId:''
   }
 
   export const cartSlice = createSlice({
@@ -15,6 +17,7 @@ interface CartState {
     reducers: {
       addToList: (state, action: PayloadAction<ServiceCardProps>) => {
         state.cartList.push(action.payload);
+        state.salonId=action.payload.salon_id
       },
       removeFromList: (state, action: PayloadAction<ServiceCardProps>) => { 
         const index = state.cartList.findIndex(item => item.id === action.payload.id);
@@ -24,6 +27,7 @@ interface CartState {
       },
       emptyCart: (state) => {
         state.cartList = [];
+        state.salonId=''
       }
     }
   });

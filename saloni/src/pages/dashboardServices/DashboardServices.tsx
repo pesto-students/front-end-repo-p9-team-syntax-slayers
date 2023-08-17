@@ -1,11 +1,14 @@
 import { Heading, Flex, Button,useToast, Box, Text, HStack,Image, VStack, FormControl, FormLabel,Input } from "@chakra-ui/react";
 import CrudServices from "../../components/CrudServices/CrudServices";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardTable from "../../components/DashboardTable/DashboardTable";
 import DashboardBookingDetailsCard from "../../components/DashboardBookingDetailsCard/DashboardBookingDetailsCard";
 import { dummyData } from "../../components/DashboardBookingDetailsCard/Helper";
 import TimeSlots from "../../components/TimeSlots/TimeSlots";
 import CrudSalon from "../../components/CrudSalon/CrudSalon";
+import {SalonDetails} from "../../components/CrudSalon/CrudSalon"
+import axios from "axios";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 
 enum ServiceAction {
   SERVICES = "services",
@@ -17,11 +20,30 @@ const dashboardServices = () => {
   const [activeButton, setActiveButton] = useState(
     ServiceAction.SERVICES.toString()
   );
+  const [salonDetails, setSalonDetails] = useState<SalonDetails | null>(null)
+  const user = useAppSelector(state=>state.user)
 
   const handleActiveButtons = (item: string) => {
     console.log(item);
     setActiveButton(item);
   };
+
+  useEffect(()=>{
+    const headers = {
+      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Content-Type': 'application/json',
+  };
+  const apiEndpoint=`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_GET_SALON_DETAILS_ADMIN}${user.userId}`
+  console.log(apiEndpoint)
+  axios.get(apiEndpoint,{headers})
+  .then((res)=>{
+      console.log(res.data.data[0])
+      setSalonDetails(res.data.data[0])
+  })
+  .catch((err)=>{
+     console.log(err)
+  })
+  },[user])
   return (
     <>
       <Flex
@@ -75,12 +97,12 @@ const dashboardServices = () => {
         </Flex>
         {ServiceAction.SALONDETAILS === activeButton && (
             <>
-               <CrudSalon userId="1"/>
+               <CrudSalon userId="1" salonDetails={salonDetails} />
             </>
     )}
         {ServiceAction.SERVICES == activeButton && (
           <>
-            <CrudServices salonId="1" />
+            <CrudServices salonId={salonDetails?.id} />
             <DashboardTable salonId="1"  />
           </>
         )}

@@ -15,11 +15,13 @@ import axios from "axios";
   import React, { useEffect, useState } from "react";
   import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 
-interface CrudSalonProps{
+export interface CrudSalonProps{
     userId:string
+    salonDetails:SalonDetails | null
 } 
 
-interface SalonDetails{
+export interface SalonDetails{
+    id:string
     address:string,
     banner:string[],
     city_id:string,
@@ -34,10 +36,10 @@ enum ServiceAction {
     UPDATE_DETAILS = "updateDetails",
   }
   
-const CrudSalon:React.FC<CrudSalonProps> = () => {
+const CrudSalon:React.FC<CrudSalonProps> = ({salonDetails}) => {
 
     const [activeButton, setActiveButton] = useState("");
-    const [salonDetails, setSalonDetails] = useState<SalonDetails | null>(null)
+    // const [salonDetails, setSalonDetails] = useState<SalonDetails | null>(null)
     const { isOpen, onToggle } = useDisclosure();
      const [salonImage, setSalonImage] = useState<File | null>(null);
      const user = useAppSelector(state=>state.user)
@@ -130,21 +132,7 @@ const [imageUrl, setImageUrl] = useState<string>("");
 
     }
     useEffect(()=>{
-        const headers = {
-            'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
-            'Content-Type': 'application/json',
-        };
-        const apiEndpoint=`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_GET_SALON_DETAILS_ADMIN}${user.userId}`
-        console.log(apiEndpoint)
-        axios.get(apiEndpoint,{headers})
-        .then((res)=>{
-            console.log(res.data.data[0])
-            setSalonDetails(res.data.data[0])
-        })
-        .catch((err)=>{
-           console.log(err)
-        })
-
+       
         const apiEndpoint2= `https://res.cloudinary.com/coorgly/raw/upload/v1692012905/cities_ce3y9s.json`
         axios.get(apiEndpoint2)
         .then((res)=>{

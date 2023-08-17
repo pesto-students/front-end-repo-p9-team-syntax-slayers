@@ -7,6 +7,13 @@ import {
   Divider,
   HStack,
   Progress,
+  Modal,
+  ModalHeader,
+  ModalOverlay,
+  ModalFooter,
+  ModalBody,
+  ModalContent,
+  ModalCloseButton
 } from '@chakra-ui/react';
 import { AiFillStar } from 'react-icons/ai';
 import React, { useEffect } from 'react';
@@ -18,6 +25,7 @@ import ServiceCard, {
 import ReviewCard from '../../components/ReviewCard/ReviewCard';
 import Cart from '../../components/Cart/Cart';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import {
   reviewDummyData,
   serviceListDummy,
@@ -37,9 +45,13 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
   const [activeButton, setActiveButton] = useState('');
   const [ratingNumber, setRatingNumber] = useState(0);
   const [loader, setLoader] = useState(false);
+  const [showModal, setShowModal] = React.useState(false);
 
   const cart = useAppSelector((state) => state.cart);
+  const user = useAppSelector(state=>state.user)
   const dispatch = useAppDispatch();
+  const currentSalonId = useAppSelector(state => state.cart.salonId);
+  const history = useNavigate();
 
   const { salonId } = useParams();
 
@@ -68,7 +80,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       );
     }
   };
-
+  
   useEffect(() => {
     setActiveButton('Featured');
     setFilteredServiceList(serviceList.filter((item) => item.featured == 1));
@@ -95,7 +107,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
 
     const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${
       process.env.REACT_APP_CART_LIST
-    }${'88109dd4-ec1b-4c44-9669-60b0e48f33c0'}`;
+    }${user.userId}`;
     console.log(apiEndpoint2);
     // Make the GET request.
     axios
@@ -110,11 +122,20 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       })
       .catch((error) => {
         console.error(
-          'There has been a problem with your fetch operation:',
+          'There has been a problem with our fetch operation:',
           error,
         );
       });
   }, [salonId]);
+
+  useEffect(()=>{
+    console.log(cart)
+    if (currentSalonId && currentSalonId !== salonId) {
+      setShowModal(true);
+    } else {
+     // history(`/salonDetails/${salonId}`);
+    }  
+  },[cart])
 
   useEffect(() => {
     let sum = 0;
@@ -128,7 +149,20 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       /* instead of reviewDummyData we will use reviewersList here */
     }
     setRatingNumber(sum / reviewDummyData.length);
+    
   }, []);
+
+  const handleClearCart=()=>{
+    
+    let apiEndpoint=`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_CLEAR_CART}`
+    axios.post(apiEndpoint,{"userId":user.userId})
+    .then((res)=>{
+      console.log(res)
+      dispatch(emptyCart())
+    })
+    .catch((error)=>console.log(error))
+
+  }
   return (
     <>
       <Flex direction={'column'} bg={'primary'}>
@@ -242,6 +276,23 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
           </Box>
           <Cart />
         </Flex>
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+  <ModalOverlay />
+  <ModalContent>
+    <ModalHeader>Warning</ModalHeader>
+    <ModalBody>
+      The service present in your cart is/are of another salon. Are you sure you want to clear the cart and switch?
+    </ModalBody>
+    <ModalFooter>
+      <Button variant="ghost" mr={3} onClick={() => {history(`/salonDetails/${currentSalonId}`); setShowModal(false)}}>
+        Go Back To Previous salon
+      </Button>
+      <Button colorScheme="blue" onClick={() => {handleClearCart(); setShowModal(false)} }>
+        Confirm
+      </Button>
+    </ModalFooter>
+  </ModalContent>
+</Modal>
         <Box ml={4} mt={20}>
           <Heading fontSize={'xl'} mb={3}>
             {' '}

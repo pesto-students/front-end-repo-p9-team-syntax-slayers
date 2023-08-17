@@ -2,7 +2,7 @@ import { Heading, Box, CircularProgress,Card, CardBody, HStack, Text, VStack } f
 import { GrSubtractCircle } from "react-icons/gr";
 import axios from 'axios';
 import React, {useState} from 'react'
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch,useAppSelector } from '../../redux/hooks';
 import { removeFromList } from '../../redux/slices/cart';
 
 export interface SelectedServiceCardProps{
@@ -20,17 +20,18 @@ export interface SelectedServiceCardProps{
 }
 const SelectedServiceCard:React.FC<SelectedServiceCardProps> = (props) => {
     
-  const {name,duration,price, description,id} = props 
+  const {name,duration,price, description,id,salon_id} = props 
   const dispatch = useAppDispatch()
   const [loader,setLoader]=useState(false)
+  const user = useAppSelector(state=>state.user)
 
 
   const handleRemove=()=>{
     console.log('removed',id)
     setLoader(true)
     const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_REMOVE_FROM_CART}`
-    const data={    "userId":"88109dd4-ec1b-4c44-9669-60b0e48f33c0",
-    "salonId":"69b991ae-912b-43e9-83f9-77f95e89c18b",
+    const data={    "userId":user.userId,
+    "salonId":salon_id,
     "serviceId":id}
 
     console.log(apiEndpoint)

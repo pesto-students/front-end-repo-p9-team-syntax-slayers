@@ -33,6 +33,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
   //Destructuring props
   const { name, duration, price, description,salon_id,id } = props;
   const cart = useAppSelector(state=>state.cart)
+  const user = useAppSelector(state=>state.user)
   const dispatch = useAppDispatch();
   const [loader,setLoader]=useState(false)
 
@@ -40,7 +41,7 @@ const ServiceCard: React.FC<ServiceCardProps> = (props) => {
      console.log('adding..',props)
      setLoader(true)
      const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_ADD_TO_CART}`
-     const data={  "userId":"88109dd4-ec1b-4c44-9669-60b0e48f33c0",
+     const data={  "userId":user.userId,
      "salonId":salon_id,
      "serviceId":id}
  

@@ -27,7 +27,7 @@ const Listings = () => {
   return (
     <>
       <Box w="100%" h="auto">
-        <VStack w="100%" h="200px">
+        <VStack w="100%" h="400px">
           <CarouselCard />
         </VStack>
         <VStack w="100%" h="auto">
