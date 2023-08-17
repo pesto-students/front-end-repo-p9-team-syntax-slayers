@@ -13,19 +13,11 @@ import { WarningIcon } from '@chakra-ui/icons';
 import SalonCard from '../../components/SalonCard/SalonCard';
 import TreatmentCard from '../../components/TreatmentCard/TreatmentCard';
 import ScrollableCardList from '../../components/ScrollableCardListV2/ScrollableCardList';
-import SortByNav from '../../components/SortByNavBar/SortByNavBar';
 import HeaderText from '../../components/Header/Index';
 import { Link } from 'react-router-dom';
-import {
-  City,
-  ExploreTreatment,
-  GeoAddress,
-  Salon,
-  longlat,
-} from '../../global';
+import { City, ExploreTreatment, Salon } from '../../global';
 import instance from '../../API';
 import CityCard from '../../components/CityCard/CityCard';
-import useGeolocation from '../../helper/geolocation';
 import { getDeviceType } from '../../helper/deviceType';
 import SearchLocationBar from '../../components/SearchLocationBar1/SearchLocationBar';
 import { geocodeCoordinates } from '../../helper/geoCoding';
@@ -36,6 +28,7 @@ import FeatureSection from '../../components/FeatureSection/FeatureSection';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setGeoAddress, setUserLocation } from '../../redux/slices/user';
+import useGeolocation from '../../helper/geolocation';
 
 const Landing = () => {
   const [exploreSalons, setExploreSalons] = useState<Salon[]>([]);
@@ -50,35 +43,57 @@ const Landing = () => {
 
   const geoCoding = useAppSelector((state) => state.user.GeoAddress);
   const dispatch = useAppDispatch();
+  const locationData = useGeolocation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
 
+        if (locationData) {
+          dispatch(
+            setUserLocation({
+              lat: locationData.latitude || 0,
+              lon: locationData.longitude || 0,
+            }),
+          );
+          console.log('userLocationEffect', userLocation);
+          const geoAddress = await geocodeCoordinates(
+            locationData.latitude || 0,
+            locationData.longitude || 0,
+          );
+          if (geoAddress) {
+            dispatch(
+              setGeoAddress({
+                ...geoCoding,
+                formatted: geoAddress.formatted,
+                city: geoAddress.city,
+                state: geoAddress.state,
+                country: geoAddress.country,
+                postalCode: geoAddress.postalCode,
+              }),
+            );
+          }
+        }
         const reqBody = {
           sortByType: 'relevance',
           count: 10,
-          lon: userLocation.lon,
-          lat: userLocation.lat,
+          lon: locationData.longitude,
+          lat: locationData.latitude,
         };
 
-        const [
-          exploreTreatmentsResponse,
-          citiesResponse,
-          exploreSalonsResponse,
-        ] = await Promise.all([
-          instance.get<ExploreTreatment[]>(
-            'https://res.cloudinary.com/coorgly/raw/upload/v1691938795/ExploreTeatments_drkf3i.json',
-          ),
-          instance.get<City[]>(
-            'https://res.cloudinary.com/coorgly/raw/upload/v1692012905/cities_ce3y9s.json',
-          ),
-          instance.post(
-            `${process.env.REACT_APP_BASEURL}salon/nearBySalons`,
-            reqBody,
-          ),
-        ]);
+        const exploreTreatmentsResponse = await instance.get(
+          'https://res.cloudinary.com/coorgly/raw/upload/v1691938795/ExploreTeatments_drkf3i.json',
+        );
+
+        const citiesResponse = await instance.get(
+          'https://res.cloudinary.com/coorgly/raw/upload/v1692012905/cities_ce3y9s.json',
+        );
+
+        const exploreSalonsResponse = await instance.post(
+          `${process.env.REACT_APP_BASEURL}salon/nearBySalons`,
+          reqBody,
+        );
 
         if (exploreTreatmentsResponse.status === 200) {
           setExploreTreatments(exploreTreatmentsResponse?.data || []);
@@ -101,59 +116,61 @@ const Landing = () => {
   }, []);
 
   const handleCitySelect = async (selectedId: string) => {
-    const selectedCityData = cities.find((city) => city.id === selectedId);
-    console.log('selectedCityData', selectedCityData);
-    if (selectedCityData) {
-      setIsLoading(true);
+    try {
+      const selectedCityData = cities.find((city) => city.id === selectedId);
 
-      dispatch(
-        setUserLocation({
-          lat: selectedCityData.lat,
-          lon: selectedCityData.lon,
-        }),
-      );
+      if (selectedCityData) {
+        setIsLoading(true);
 
-      const geoAddress = await geocodeCoordinates(
-        selectedCityData.lat || 12.9299,
-        selectedCityData.lon || 77.5822,
-      );
-
-      if (geoAddress) {
-        if(geoAddress.city=='Bengaluru')
-        geoAddress.city='Bangalore'
-        console.log(geoAddress)
         dispatch(
-          setGeoAddress({
-            formatted: geoAddress.formatted,
-            city: geoAddress.city,
-            state: geoAddress.state,
-            country: geoAddress.country,
-            postalCode: geoAddress.postalCode,
+          setUserLocation({
+            lat: selectedCityData.lat || 12.9299,
+            lon: selectedCityData.lon || 77.5822,
           }),
         );
-      }
-      const reqBody = {
-        sortByType: 'relevance',
-        count: 10,
-        lon: selectedCityData.lon,
-        lat: selectedCityData.lat,
-      };
 
-      const [exploreSalonsResponse] = await Promise.all([
-        instance.post(
+        const geoAddress = await geocodeCoordinates(
+          selectedCityData.lat || 12.9299,
+          selectedCityData.lon || 77.5822,
+        );
+
+        if (geoAddress) {
+          if (geoAddress.city == 'Bengaluru') geoAddress.city = 'Bangalore';
+          console.log(geoAddress);
+          dispatch(
+            setGeoAddress({
+              formatted: geoAddress.formatted,
+              city: geoAddress.city,
+              state: geoAddress.state,
+              country: geoAddress.country,
+              postalCode: geoAddress.postalCode,
+            }),
+          );
+        }
+        const reqBody = {
+          sortByType: 'relevance',
+          count: 10,
+          lon: selectedCityData.lon,
+          lat: selectedCityData.lat,
+        };
+
+        const exploreSalonsResponse = await instance.post(
           `${process.env.REACT_APP_BASEURL}salon/nearBySalons`,
           reqBody,
-        ),
-      ]);
+        );
 
-      if (exploreSalonsResponse.status === 200) {
-        setExploreSalons(exploreSalonsResponse?.data?.data || []);
+        if (exploreSalonsResponse.status === 200) {
+          setExploreSalons(exploreSalonsResponse?.data?.data || []);
+        }
+        setIsLoading(false);
       }
-      setIsLoading(false);
+    } catch (error) {
+      console.log('-err', error);
     }
   };
 
-  console.log('geoCoding?.city', geoCoding?.city);
+  console.log('geoCoding', geoCoding);
+  console.log('userLocation', userLocation);
   const handleSearchQueryChange = (value: string) => {
     // Handle the search query change in the parent component
     console.log('Search query changed:', value);
@@ -175,7 +192,7 @@ const Landing = () => {
           />
         </Box>
         <SearchLocationBar
-          city={geoCoding?.city || ''}
+          city={geoCoding?.city || geoCoding?.formatted}
           lat={userLocation.lat}
           lon={userLocation.lon}
           dropdownOptions={cities}
@@ -234,7 +251,6 @@ const Landing = () => {
               </Link>
             )}
           </HStack>
-          {/* <SortByNav options={['high', 'low']} /> */}
 
           {isLoading ? (
             <LoadingSpinner />

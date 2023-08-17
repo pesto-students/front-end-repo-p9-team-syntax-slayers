@@ -24,7 +24,7 @@ import {
   useDisclosure,
   Heading,
 } from '@chakra-ui/react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import LoginPartner from '../Logins/LoginPartner';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks/index';
@@ -64,7 +64,7 @@ const Navbar = () => {
   const handleSuccessfulLoginPartner = () => {
     onLoginModalForPartnerToggle(); // Close the login modal
     dispatch(setToken());
-    navigate('/dashboardService')
+    navigate('/dashboardService');
   };
   // Function to handle profile button click event (toggle profile dropdown)
   const handleProfile = () => {
@@ -76,7 +76,7 @@ const Navbar = () => {
   const handleLogout = () => {
     console.log('logout');
     dispatch(removeToken());
-    navigate('/')
+    navigate('/');
   };
 
   //Function to handle user search input in navbar
@@ -89,17 +89,26 @@ const Navbar = () => {
   };
   // The render of the component
 
-  useEffect(()=>{
-    dispatch(setToken())
-  //  user.userType=='salon_admin'? navigate('/dashboardService'):navigate('/')
-  },[user])
-  console.log(user)
+  useEffect(() => {
+    dispatch(setToken());
+    //  user.userType=='salon_admin'? navigate('/dashboardService'):navigate('/')
+  }, [user]);
+  console.log(user);
   return (
     <>
       <nav>
         {/* Stacking logo and search box input together on the left side of the navbar */}
         <HStack spacing={8}>
-          <Image src="/logo-no-background.png" alt="logo" height={'10'} onClick={()=>navigate('/')} cursor={'pointer'}/>
+          <Link to="/">
+            <Image
+              src="/logo-no-background.png"
+              alt="logo"
+              height={'10'}
+              // onClick={() => console.log('hi')}
+              _hover={{ cursor: 'pointer' }}
+            />
+          </Link>
+
           {/* Only show search box if a user is logged in. This is determined by isLoggedIn state */}
           {/* {isListingsRoute && (
             <LocationDropdown city={''} dropdownOptions={[]} />

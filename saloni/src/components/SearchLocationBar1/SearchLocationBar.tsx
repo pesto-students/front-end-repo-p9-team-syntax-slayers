@@ -117,33 +117,6 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
           dropdownOptions={dropdownOptions}
           onCitySelect={onCitySelect}
         />
-
-        {/* <Menu>
-          <MenuButton
-            as={Button}
-            colorScheme="white"
-            border={'1px'}
-            color={'black'}
-            borderColor={'grey'}
-            height="48px"
-            w={useBreakpointValue({ base: '260px', sm: '200px' })}
-          >
-            <Flex justify="space-between" align="center" width="100%">
-              {city}
-              <ChevronDownIcon />
-            </Flex>
-          </MenuButton>
-          <MenuList w={useBreakpointValue({ base: '260px', sm: '200px' })}>
-            {dropdownOptions.map((option) => (
-              <MenuItem
-                key={option.id}
-                onClick={() => onCitySelect && onCitySelect(option.id)}
-              >
-                {option.name}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Menu> */}
       </Box>
 
       <InputGroup
@@ -156,7 +129,8 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
         <Input
           placeholder="Salon"
           size="md"
-          maxW={'300'}
+          w={'700px'}
+          maxW={'700px'}
           height="48px"
           border={'1px'}
           borderRadius={'3px'}
@@ -190,36 +164,50 @@ const SearchLocationBar: React.FC<SearchLocationBarProps> = (props) => {
             p={'10px'}
             zIndex={1000}
           >
-            {searchResults.map((result) => (
+            {searchResults.length === 0 ? (
               <Box
-                key={result.id}
                 p={4}
                 borderRadius="md"
                 boxShadow="md"
                 cursor="pointer"
-                onClick={() => handleSalonClick(result.id)}
                 _hover={{ bg: 'gray.100' }}
                 w={['390px']}
                 zIndex={1000}
               >
-                <HStack justifyContent={'space-between'}>
-                  <HStack>
-                    <Text fontWeight="semibold">{result.name}</Text>
-                  </HStack>
-                  <HStack>
-                    <StarIcon color="gold" />{' '}
-                    <Text fontSize="sm">{result.rating}</Text>
-                  </HStack>
-
-                  <HStack>
-                    <Text color="gray.600">
-                      <GiPathDistance /> {result.distance.toFixed(2)} Kms
-                    </Text>
-                  </HStack>
-                  <GenderBtn> {result.gender} </GenderBtn>
-                </HStack>
+                <Text>No results found.</Text>
               </Box>
-            ))}
+            ) : (
+              searchResults.map((result) => (
+                <Box
+                  key={result.id}
+                  p={4}
+                  borderRadius="md"
+                  boxShadow="md"
+                  cursor="pointer"
+                  onClick={() => handleSalonClick(result.id)}
+                  _hover={{ bg: 'gray.100' }}
+                  w={['390px']}
+                  zIndex={1000}
+                >
+                  <HStack justifyContent={'space-between'}>
+                    <HStack>
+                      <Text fontWeight="semibold">{result.name}</Text>
+                    </HStack>
+                    <HStack>
+                      <StarIcon color="gold" />{' '}
+                      <Text fontSize="sm">{result.rating}</Text>
+                    </HStack>
+
+                    <HStack>
+                      <Text color="gray.600">
+                        <GiPathDistance /> {result.distance.toFixed(2)} Kms
+                      </Text>
+                    </HStack>
+                    <GenderBtn> {result.gender} </GenderBtn>
+                  </HStack>
+                </Box>
+              ))
+            )}
           </Box>
         </ScaleFade>
       )}

@@ -6,6 +6,7 @@ import {
   MenuList,
   MenuItem,
   Flex,
+  Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
@@ -30,10 +31,11 @@ const LocationDropdown: React.FC<LocationDropdownProps> = ({
         color={'black'}
         borderColor={'grey'}
         height="48px"
-        w={useBreakpointValue({ base: '260px', sm: '200px' })}
+        w={'auto'}
+        maxW={'300px'}
       >
         <Flex justify="space-between" align="center" width="100%">
-          {city}
+          <Text noOfLines={1}>{city}</Text>
           <ChevronDownIcon />
         </Flex>
       </MenuButton>

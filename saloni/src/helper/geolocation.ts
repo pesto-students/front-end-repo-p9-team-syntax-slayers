@@ -15,6 +15,9 @@ const useGeolocation = () => {
         (error) => {
           setError('Error getting location: ' + error.message);
         },
+        {
+          maximumAge: 0 * 1000, // Maximum age of cached position in milliseconds (1 minute)
+        },
       );
     } else {
       setError('Geolocation is not available in this browser.');

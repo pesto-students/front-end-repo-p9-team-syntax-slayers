@@ -82,8 +82,8 @@ export const userSlice = createSlice({
         ...state,
         userLocation: {
           ...state.userLocation,
-          lat: lat,
-          lon: lon,
+          lat: lat || 0,
+          lon: lon || 0,
         },
       };
     },

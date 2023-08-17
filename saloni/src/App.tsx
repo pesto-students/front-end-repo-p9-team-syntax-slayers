@@ -23,43 +23,6 @@ import { useAppDispatch } from './redux/hooks';
 import { setGeoAddress, setUserLocation } from './redux/slices/user';
 
 function App() {
-  const dispatch = useAppDispatch();
-  const locationData = useGeolocation();
-
-  useEffect(() => {
-    async function fetchGeolocation() {
-      if (locationData) {
-        dispatch(
-          setUserLocation({
-            lat: locationData.latitude || 12.9299,
-            lon: locationData.longitude || 77.5822,
-          }),
-        );
-        const geoAddress = await geocodeCoordinates(
-          locationData.latitude || 12.9299,
-          locationData.longitude || 77.5822,
-        );
-
-        if (geoAddress) {
-          if(geoAddress.city=='Bengaluru')
-           geoAddress.city='Bangalore'
-           console.log(geoAddress)
-          dispatch(
-            setGeoAddress({
-              formatted: geoAddress.formatted,
-              city: geoAddress.city,
-              state: geoAddress.state,
-              country: geoAddress.country,
-              postalCode: geoAddress.postalCode,
-            }),
-          );
-        }
-        console.log('AppgeoAddress', geoAddress);
-      }
-    }
-    fetchGeolocation();
-  }, [locationData]);
-
   return (
     <>
       <Router>
