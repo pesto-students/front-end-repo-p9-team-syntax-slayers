@@ -29,7 +29,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "node ./dist/index.js",
+    "start": "node dist/index.js",
     "dev": "react-scripts start",
     "build": "tsc",
     "test": "react-scripts test",
