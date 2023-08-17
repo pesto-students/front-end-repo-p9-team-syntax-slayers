@@ -288,7 +288,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       <Button variant="ghost" mr={3} onClick={() => {history(`/salonDetails/${currentSalonId}`); setShowModal(false)}}>
         Go Back To Previous salon
       </Button>
-      <Button colorScheme="blue" onClick={() => {handleClearCart(); setShowModal(false)} }>
+      <Button color={'accent.500'} variant={'outline'} colorScheme="accent.500" onClick={() => {handleClearCart(); setShowModal(false)} }>
         Confirm
       </Button>
     </ModalFooter>

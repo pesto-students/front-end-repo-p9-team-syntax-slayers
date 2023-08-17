@@ -28,8 +28,8 @@ const TotalCostAndDetails:React.FC<TotalCostAndDetailsProps> = () => {
       <HStack spacing={8}>
         <Image src="https://static.magicpin.com/samara/media/blog/18-01-2022-best_salon_bangalore_cover.jpg" maxH="100px" maxW="180" rounded={10}/>
         <VStack spacing={0}>
-          <Heading fontSize={'xl'}>Salon Name</Heading>
-          <Text>Location</Text>
+          <Heading fontSize={'xl'}>{cart.salon.salonName}</Heading>
+          <Text>{cart.salon.location}</Text>
         </VStack>
       </HStack>
       <Divider color={'lightGrey'} mt={4}/>

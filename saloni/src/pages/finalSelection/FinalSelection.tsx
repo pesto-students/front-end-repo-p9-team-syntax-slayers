@@ -16,11 +16,15 @@ const FinalSelection = () => {
   const [selectedServiceList, setSelectServiceList] = useState<SelectedServiceCardProps[]>([]);
   const cart = useAppSelector(state=>state.cart)
   const dispatch = useAppDispatch();
+  const [totalTime, setTotalTime] = useState(0)
 
   useEffect(()=>{
       console.log(cart.cartList)
       setSelectServiceList(cart.cartList)
-    
+      const sum =cart.cartList.reduce((sum,currentItem)=>{
+        return sum + currentItem.duration
+      },0)
+      setTotalTime(sum)
   },[cart.cartList])
   
   const handleGoBack=()=> {
@@ -81,7 +85,7 @@ const FinalSelection = () => {
             return <SelectedServiceCard key={index} salon_id={item.salon_id} id={item.id} name={item.name} duration={item.duration} price={item.price} description={item.description}/>;
           })}
         </Flex>
-        {view=="360px" && <DateSlots salonId="1"/> }
+        {view=="360px" && <DateSlots salonId="1"  totalTime={totalTime}/> }
         <TotalCostAndDetails />
       </Flex>
       </Box>
@@ -89,7 +93,7 @@ const FinalSelection = () => {
 
       <Box padding={{base:"5",sm:"10"}} pb={{sm:"0"}}>
       <HStack>
-       {view=="400px" &&   <DateSlots salonId={'1'}/>} 
+       {view=="400px" &&   <DateSlots salonId={'1'} totalTime={totalTime} />} 
       
        <Button onClick={checkoutHandler} width={{base:'100%', md:"50%",sm:"10%"}} h={{base:"40px",sm:"70px"}} variant={useBreakpointValue({ base: "solid", sm: "outline" })} bg={{ base: "accent.500", sm: "white" }} color={{ base: "white", sm: "accent.500" }} colorScheme={useBreakpointValue({ base: "accent.500", sm: "white" })} mb={{base:"5",sm:"10"}}>Book Now</Button>
        </HStack>

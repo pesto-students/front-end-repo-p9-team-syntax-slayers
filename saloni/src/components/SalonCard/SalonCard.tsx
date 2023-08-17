@@ -48,11 +48,19 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
 
   const history = useNavigate();
   const dispatch = useAppDispatch()
+  const user = useAppSelector(state=>state.user)
 
   const handleCardClick = () => {
-      const salon={salonName,location,gender}
-      dispatch(addSalonDetails(salon))
-      history(`/salonDetails/${id}`);
+      
+      if(user.isLoggedIn){
+        const salon={salonName,location,gender}
+        dispatch(addSalonDetails(salon))
+        history(`/salonDetails/${id}`);
+      }
+      else{
+        alert('please login')
+      }
+
       
   };
 

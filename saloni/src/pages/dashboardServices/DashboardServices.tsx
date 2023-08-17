@@ -132,7 +132,7 @@ const dashboardServices = () => {
                <HStack ><Text color={"white"}fontSize={'lg'} >TTotal Slots : </Text><Text color={'accent.500'}>10</Text> </HStack>
               </Flex>
               <Box w={{ base: "100%", sm: "100%" }}>
-                <TimeSlots dateSeleted="3-aug-2023" salonId="11111" />
+                <TimeSlots totalServiceTime={10} dateSeleted={null} salonId="11111" />
               </Box>
             </Flex>
 
