@@ -24,7 +24,7 @@ const FinalSelection = () => {
   },[cart.cartList])
   
   const handleGoBack=()=> {
-     navigate('/salonDetails')
+     navigate(`/`)
   }
 
   const checkoutHandler = async()=>{

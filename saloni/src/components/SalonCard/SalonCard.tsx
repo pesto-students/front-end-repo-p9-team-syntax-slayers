@@ -18,19 +18,20 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 
 import GenderBtn from '../Buttons/GenderBtn';
+import { addSalonDetails } from '../../redux/slices/cart';
 
 
-interface SalonCardProps {
+export interface SalonCardProps {
   id?: string;
   salonName: string;
-  rating: string;
+  rating?: string;
   price?: string;
   gender: string;
   distance?: number;
   location: string;
-  imageUrl: string;
+  imageUrl?: string;
   ratingCount?: number;
-  statusClose: boolean;
+  statusClose?: boolean;
 }
 
 const SalonCard: React.FC<SalonCardProps> = (props) => {
@@ -46,9 +47,13 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
   } = props;
 
   const history = useNavigate();
+  const dispatch = useAppDispatch()
 
   const handleCardClick = () => {
+      const salon={salonName,location,gender}
+      dispatch(addSalonDetails(salon))
       history(`/salonDetails/${id}`);
+      
   };
 
   return (

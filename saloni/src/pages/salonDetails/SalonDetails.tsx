@@ -51,6 +51,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
   const user = useAppSelector(state=>state.user)
   const dispatch = useAppDispatch();
   const currentSalonId = useAppSelector(state => state.cart.salonId);
+  const salonRedux = useAppSelector(state=>state.cart.salon)
   const history = useNavigate();
 
   const { salonId } = useParams();
@@ -133,7 +134,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
     if (currentSalonId && currentSalonId !== salonId) {
       setShowModal(true);
     } else {
-     // history(`/salonDetails/${salonId}`);
+      setShowModal(false)
     }  
   },[cart])
 
@@ -167,7 +168,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
     <>
       <Flex direction={'column'} bg={'primary'}>
         <HStack spacing={12} ml={6}>
-          <Text color={'white'}>Salon NAme</Text>{' '}
+          <Text color={'white'}>{salonRedux.salonName}</Text>{' '}
           <HStack>
             {' '}
             <AiFillStar color="gold" />
@@ -178,7 +179,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
             color={'accent.500'}
             colorScheme={'accent.500'}
           >
-            Unisex
+            {salonRedux.gender}
           </Button>
         </HStack>
         <HStack spacing={12} ml={6}>
@@ -187,7 +188,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
             <Text color={'green'}>Open</Text>{' '}
             <Text color={'white'}>Until: 7:00PM</Text>
           </HStack>{' '}
-          <Text color={'white'}>Whitefield Banglore</Text>
+          <Text color={'white'}>{salonRedux.location}</Text>
         </HStack>
       </Flex>
       <CarouselCard />

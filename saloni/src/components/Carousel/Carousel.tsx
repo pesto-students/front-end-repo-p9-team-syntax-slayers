@@ -31,7 +31,7 @@ const CarouselCard = () => {
       <Box
         as={'div'}
         w={'100%'}
-        h={['400px']}
+        h={['200px','400px']}
         m={'auto'}
         bg={''}
         position={'relative'}

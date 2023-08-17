@@ -64,6 +64,7 @@ const Navbar = () => {
   const handleSuccessfulLoginPartner = () => {
     onLoginModalForPartnerToggle(); // Close the login modal
     dispatch(setToken());
+    navigate('/dashboardService')
   };
   // Function to handle profile button click event (toggle profile dropdown)
   const handleProfile = () => {
@@ -75,6 +76,7 @@ const Navbar = () => {
   const handleLogout = () => {
     console.log('logout');
     dispatch(removeToken());
+    navigate('/')
   };
 
   //Function to handle user search input in navbar
@@ -97,7 +99,7 @@ const Navbar = () => {
       <nav>
         {/* Stacking logo and search box input together on the left side of the navbar */}
         <HStack spacing={8}>
-          <Image src="/logo-no-background.png" alt="logo" height={'10'} />
+          <Image src="/logo-no-background.png" alt="logo" height={'10'} onClick={()=>navigate('/')} cursor={'pointer'}/>
           {/* Only show search box if a user is logged in. This is determined by isLoggedIn state */}
           {/* {isListingsRoute && (
             <LocationDropdown city={''} dropdownOptions={[]} />
@@ -136,7 +138,7 @@ const Navbar = () => {
           <ul className={hamburgerIconStatus ? 'menu-list' : 'menu-list close'}>
             <li>
               <NavLink to={'/'} onClick={onLoginModalForPartnerToggle}>
-                {'Register as Partner'}
+                {'For Partners'}
               </NavLink>
             </li>
             <li>
