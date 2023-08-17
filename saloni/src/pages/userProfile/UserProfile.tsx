@@ -1,17 +1,46 @@
 import { Button, Flex, Heading, Box, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { AiOutlineShoppingCart, AiOutlineHeart } from "react-icons/ai";
 import BookingCard from "../../components/BookingsCard/BookingCard";
 //we are importing this for only dummy data..
 import { dummyData } from "../../components/BookingsCard/Helper";
+import { useAppSelector } from "../../redux/hooks";
 const UserProfile = () => {
   const [activeButton, setActiveButton] = useState("");
+  const user  = useAppSelector(state=>state.user)
 
   const handleActiveButton = (id: string) => {
     console.log("clicked", dummyData);
     setActiveButton(id);
     console.log(activeButton);
   };
+
+  useEffect(()=>{
+    
+    const headers = {
+      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Content-Type': 'application/json',
+  };
+    const apiEndpoint1 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_MY_BOOKINGS}${user.userId}`
+    axios.get(apiEndpoint1,{headers})
+    .then((res)=>{
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+
+    const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_MY_FAVOURITES}${user.userId}`
+    axios.get(apiEndpoint2,{headers})
+    .then((res)=>{
+      console.log(res)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+
+  },[user.userId])
   return (
     <>
       <Flex
@@ -25,9 +54,10 @@ const UserProfile = () => {
         textAlign={"left"}
       >
         <Flex direction={"column"} mb={{ base: 5, sm: 0 }}>
-          <Text color={"white"}>Name : Sidhanth</Text>
-          <Text color={"white"}>Phone : 7420992662</Text>
-          <Text color={"white"}>Email : kamblesidhanth2gmail.com</Text>
+          <Text color={"white"}>Name : {user.firstName}</Text>
+          <Text color={"white"}>Email : {user.email}</Text>
+          <Text color={"white"}>UserType : {user.userType==='user'?'Customer':'Partner'}</Text>
+
         </Flex>
         <Button
           w={{ base: "80%", sm: "10%" }}
