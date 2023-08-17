@@ -280,6 +280,7 @@ const Landing = () => {
                             salonName={myBooking.salonName}
                             startTime={myBooking.startTime}
                             salonAddress={myBooking.salonAddress}
+                            bookedServices={myBooking.bookedServices}
                           />
                         ))}
                       </HStack>
