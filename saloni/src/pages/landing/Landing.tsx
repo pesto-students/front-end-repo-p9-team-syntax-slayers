@@ -15,8 +15,8 @@ import TreatmentCard from '../../components/TreatmentCard/TreatmentCard';
 import ScrollableCardList from '../../components/ScrollableCardListV2/ScrollableCardList';
 import HeaderText from '../../components/Header/Index';
 import { Link } from 'react-router-dom';
-import { City, ExploreTreatment, Salon } from '../../global';
-import instance from '../../API';
+import { BookingInfo, City, ExploreTreatment, Salon } from '../../global';
+import instance, { setAuthHeaders } from '../../API';
 import CityCard from '../../components/CityCard/CityCard';
 import { getDeviceType } from '../../helper/deviceType';
 import SearchLocationBar from '../../components/SearchLocationBar1/SearchLocationBar';
@@ -29,10 +29,11 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { setGeoAddress, setUserLocation } from '../../redux/slices/user';
 import useGeolocation from '../../helper/geolocation';
+import MyUpcomingBookingCard from '../../components/MyUpcomingBookingCard/MyUpcomingBookingCard';
 
 const Landing = () => {
   const [exploreSalons, setExploreSalons] = useState<Salon[]>([]);
-  const [upComingBookings, setUpComingBookings] = useState([]);
+  const [upComingBookings, setUpComingBookings] = useState<BookingInfo[]>([]);
 
   const [exploreTreatments, setExploreTreatments] = useState<
     ExploreTreatment[]
@@ -42,7 +43,7 @@ const Landing = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const userLocation = useAppSelector((state) => state.user.userLocation);
-  const userToken = useAppSelector((state) => state.user.token);
+  const user = useAppSelector((state) => state.user);
 
   const geoCoding = useAppSelector((state) => state.user.GeoAddress);
   const dispatch = useAppDispatch();
@@ -53,6 +54,22 @@ const Landing = () => {
       try {
         setIsLoading(true);
 
+        if (user?.token) {
+          const myUpcomingBookingsResponse = await instance.get(
+            `${process.env.REACT_APP_BASEURL}profile/myUpComingBookings/${user.userId}`,
+            {
+              headers: {
+                Authorization: user?.token,
+              },
+            },
+          );
+
+          if (myUpcomingBookingsResponse.status === 200) {
+            setUpComingBookings(
+              myUpcomingBookingsResponse?.data?.data[0]?.upcomingBookings,
+            );
+          }
+        }
         if (locationData) {
           dispatch(
             setUserLocation({
@@ -236,6 +253,65 @@ const Landing = () => {
       {/* Section 2 */}
 
       <VStack alignItems={'flex-start'}>
+        {/* My Upcoming Bookings Section */}
+        {user?.token && (
+          <VStack m={5} alignItems={'flex-start'} justifyContent={'flex-start'}>
+            <HStack
+              w={'100%'}
+              alignItems={'flex-start'}
+              justifyContent={'space-between'}
+            >
+              <HeaderText text={'My Upcoming Bookings'} />
+            </HStack>
+
+            {isLoading ? (
+              <LoadingSpinner />
+            ) : (
+              <>
+                <Box maxH="60%" maxW={['85vw', '90vw']}>
+                  {Array.isArray(upComingBookings) &&
+                    upComingBookings.length > 0 && (
+                      <HStack spacing={4}>
+                        {upComingBookings.map((myBooking) => (
+                          <MyUpcomingBookingCard
+                            key={myBooking.orderID}
+                            banner={myBooking.banner}
+                            orderID={myBooking.orderID}
+                            salonName={myBooking.salonName}
+                            startTime={myBooking.startTime}
+                            salonAddress={myBooking.salonAddress}
+                          />
+                        ))}
+                      </HStack>
+                    )}
+
+                  {Array.isArray(upComingBookings) &&
+                    upComingBookings.length === 0 && (
+                      <VStack
+                        align="center"
+                        justify="center"
+                        spacing={3}
+                        p={5}
+                        borderWidth="1px"
+                        borderRadius="lg"
+                        borderColor="gray.300"
+                        backgroundColor="gray.100"
+                        textAlign="center"
+                        minHeight="200px"
+                      >
+                        <Icon as={WarningIcon} boxSize={10} color="gray.500" />
+                        <Text fontSize="lg" fontWeight="bold">
+                          No Upcoming Booking
+                        </Text>
+                        {/* <Text>Please check back later.</Text> */}
+                      </VStack>
+                    )}
+                </Box>
+              </>
+            )}
+          </VStack>
+        )}
+
         {/* Explore Salon Section */}
         <VStack m={5} alignItems={'flex-start'} justifyContent={'flex-start'}>
           <HStack

@@ -45,3 +45,17 @@ export interface ExploreTreatment {
   description: string;
   treatment_pic_url: string;
 }
+
+export interface BookedService {
+  name: string;
+  duration: number;
+}
+
+export interface BookingInfo {
+  banner: string;
+  orderID: string;
+  salonName: string;
+  startTime: string;
+  salonAddress: string;
+  bookedServices?: BookedService[];
+}
