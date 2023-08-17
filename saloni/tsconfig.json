@@ -10,7 +10,8 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "target": "ES2021", // The version of ECMAScript to compile to
+    "module": "CommonJS",
     "outDir": "./dist",
     "rootDir": "./src",
     "moduleResolution": "node",
