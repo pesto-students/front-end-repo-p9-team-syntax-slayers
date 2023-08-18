@@ -15,8 +15,10 @@ const FinalSelection = () => {
 
   const [selectedServiceList, setSelectServiceList] = useState<SelectedServiceCardProps[]>([]);
   const cart = useAppSelector(state=>state.cart)
+  const user = useAppSelector(state=>state.user)
   const dispatch = useAppDispatch();
   const [totalTime, setTotalTime] = useState(0)
+  const [finalSlots, setFinalSlots] = useState<DateAndTime | null>()
 
   useEffect(()=>{
       console.log(cart.cartList)
@@ -34,6 +36,7 @@ const FinalSelection = () => {
   const handleSelectedDateSlots = (selectedDateSlots: DateAndTime | null) => {
     // Handle the data from child here
     console.log("Received Date and Time slots from child:", selectedDateSlots);
+    setFinalSlots(selectedDateSlots)
     // Use the data as needed
 };
 
@@ -44,6 +47,14 @@ const FinalSelection = () => {
     const orderData = await axios.post(`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_RAZORPAY_CHECKOUT}`,{
       amount:400
     })
+    const payload = {
+      "userId": user.userId,
+      "salonId": cart.salonId,
+      "serviceIds": cart.cartList.map(service => service.id),
+      "orderId": orderData,
+      "timeAndDateSlots": finalSlots
+  }
+  console.log(payload)
    const {data} = orderData
    console.log(`${process.env.REACT_APP_BASEURL as string}${process.env.REACT_APP_RAZORPAY_VERIFICATION as string}`)
     const options = {
@@ -74,6 +85,8 @@ const FinalSelection = () => {
             rzp1.open();
 
             }
+
+  
 
   return (
     <> 
