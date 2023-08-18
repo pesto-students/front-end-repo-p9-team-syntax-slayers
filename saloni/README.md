@@ -30,8 +30,8 @@ To install Saloni on your local machine, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/your-username/saloni.git`
 2. Navigate to the project directory: `cd saloni`
-3. Install dependencies: `npm install`
-4. Start the development server: `npm start`
+3. Install dependencies: `yarn install`
+4. Start the development server: `yarn dev`
 
 ## Technology Stack
 
