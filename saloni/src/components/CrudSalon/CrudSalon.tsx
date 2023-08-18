@@ -92,7 +92,7 @@ const [imageUrl, setImageUrl] = useState<string>("");
         const city= cities.filter((item)=>item.name===user.GeoAddress.city)[0]
 
         const headers = {
-            'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+            'Authorization': `Bearer ${user.token}`, 
             'Content-Type': 'application/json',
         };
 

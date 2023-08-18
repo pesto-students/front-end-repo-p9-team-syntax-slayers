@@ -38,7 +38,7 @@ const dashboardServices = () => {
 
   useEffect(()=>{
     const headers = {
-      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Authorization': `Bearer ${user.token}`,  
       'Content-Type': 'application/json',
   };
   const apiEndpoint=`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_GET_SALON_DETAILS_ADMIN}${user.userId}`
@@ -56,7 +56,7 @@ const dashboardServices = () => {
   useEffect(()=>{
          
     const headers = {
-      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Authorization': `Bearer ${user.token}`,  
       'Content-Type': 'application/json',
     };
     

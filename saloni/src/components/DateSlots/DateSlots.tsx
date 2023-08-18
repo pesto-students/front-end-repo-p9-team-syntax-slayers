@@ -47,7 +47,7 @@ const DateSlots:React.FC<DateSlotsProps> = ({totalTime,onDateSlotSelected}) => {
       useEffect(()=>{
          
         const headers = {
-          'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+          'Authorization': `Bearer ${user.token}`, 
           'Content-Type': 'application/json',
         };
 

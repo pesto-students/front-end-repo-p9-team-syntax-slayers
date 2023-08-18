@@ -51,7 +51,7 @@ const AddReview:React.FC<AddReviewProps> = ({salonId}) => {
         setLoading(true)
 
         const headers = {
-            'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+            'Authorization': `Bearer ${user.token}`, 
             'Content-Type': 'application/json',
         };
 
@@ -85,7 +85,7 @@ const AddReview:React.FC<AddReviewProps> = ({salonId}) => {
        
 
     const headers = {
-        'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+        'Authorization': `Bearer ${user.token}`, 
         'Content-Type': 'application/json',
     };
   

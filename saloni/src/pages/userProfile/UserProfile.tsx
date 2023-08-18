@@ -19,7 +19,7 @@ const UserProfile = () => {
   useEffect(()=>{
     
     const headers = {
-      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Authorization': `Bearer ${user.token}`,
       'Content-Type': 'application/json',
   };
     const apiEndpoint1 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_MY_BOOKINGS}${user.userId}`

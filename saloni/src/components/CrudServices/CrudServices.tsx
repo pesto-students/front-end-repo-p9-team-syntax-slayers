@@ -65,7 +65,7 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) =
     });
      
     const headers = {
-      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Authorization': `Bearer ${user.token}`, 
       'Content-Type': 'application/json',
     };
 
@@ -102,7 +102,7 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) =
     });
 
     const headers = {
-      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Authorization': `Bearer ${user.token}`,
       'Content-Type': 'application/json',
     };
 
