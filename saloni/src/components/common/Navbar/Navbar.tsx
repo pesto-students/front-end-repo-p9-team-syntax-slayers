@@ -1,8 +1,4 @@
-// Importing required dependencies
 import React, { useEffect, useState } from 'react';
-import './Navbar.css';
-import { HamburgerIcon, SearchIcon } from '@chakra-ui/icons';
-import LoginUser from '../Logins/LoginUser';
 import {
   Image,
   Text,
@@ -25,15 +21,15 @@ import {
   Heading,
 } from '@chakra-ui/react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { HamburgerIcon, SearchIcon } from '@chakra-ui/icons';
+import LoginUser from '../Logins/LoginUser';
 import LoginPartner from '../Logins/LoginPartner';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks/index';
 import { removeToken, setToken } from '../../../redux/slices/user';
-import LocationDropdown from '../../LocationDropDown/LocationDropDown';
+// import LocationDropdown from '../../LocationDropDown/LocationDropDown';
 
-// Defining Navbar functional component
 const Navbar = () => {
-  // Defining state variables for managing Navbar behavior
   const [hamburgerIconStatus, setHamburgerIconStatus] = useState(false);
   const [show, setShow] = useState(false);
   const { isOpen, onToggle } = useDisclosure();
@@ -50,36 +46,30 @@ const Navbar = () => {
   const location = useLocation();
   const isListingsRoute = location.pathname === '/listings';
 
-  // const [isLoggedIn, setIsLoggedIn] = useState(user.isLoggedIn);
-
-  // Function to handle click event (opens and closes the menu)
   const handleClick = () => {
     setHamburgerIconStatus(!hamburgerIconStatus);
   };
 
   const handleSuccessfulLoginUser = () => {
-    onLoginModalToggle(); // Close the login modal
+    onLoginModalToggle();
     dispatch(setToken());
   };
+
   const handleSuccessfulLoginPartner = () => {
-    onLoginModalForPartnerToggle(); // Close the login modal
+    onLoginModalForPartnerToggle();
     dispatch(setToken());
     navigate('/dashboardService');
   };
-  // Function to handle profile button click event (toggle profile dropdown)
+
   const handleProfile = () => {
-    console.log('profile');
     setShow(!show);
   };
 
-  //Function to handle logout of user
   const handleLogout = () => {
-    console.log('logout');
     dispatch(removeToken());
     navigate('/');
   };
 
-  //Function to handle user search input in navbar
   const handleSearch = () => {
     console.log('searching..');
   };
@@ -87,36 +77,36 @@ const Navbar = () => {
   const handleUserNavigation = (page: string) => {
     navigate(page);
   };
-  // The render of the component
 
   useEffect(() => {
     dispatch(setToken());
-    //  user.userType=='salon_admin'? navigate('/dashboardService'):navigate('/')
   }, [user]);
-  console.log(user);
+
   return (
     <>
-      <nav>
-        {/* Stacking logo and search box input together on the left side of the navbar */}
+      <Box
+        bg="rgb(36, 44, 47)"
+        p="10px"
+        display="flex"
+        justifyContent="space-between"
+        color="aliceblue"
+        position="relative"
+        zIndex="99"
+      >
         <HStack spacing={8}>
           <Link to="/">
             <Image
               src="/logo-no-background.png"
               alt="logo"
-              height={'10'}
-              // onClick={() => console.log('hi')}
+              height="10"
               _hover={{ cursor: 'pointer' }}
             />
           </Link>
 
-          {/* Only show search box if a user is logged in. This is determined by isLoggedIn state */}
-          {/* {isListingsRoute && (
-            <LocationDropdown city={''} dropdownOptions={[]} />
-          )} */}
-          {user.isLoggedIn && (
+          {/* {user.isLoggedIn && (
             <InputGroup
               maxW={{ base: '210px', sm: 'lg' }}
-              justifyContent={'center'}
+              justifyContent="center"
             >
               <InputRightElement>
                 <SearchIcon
@@ -127,156 +117,155 @@ const Navbar = () => {
               </InputRightElement>
               <Input
                 placeholder="Salon"
-                color={'black'}
+                color="black"
                 size={{ base: 'sm', sm: 'lg' }}
-                w={'lg'}
-                bg={'white'}
-                borderRadius={'3px'}
+                w="lg"
+                bg="white"
+                borderRadius="3px"
               />
             </InputGroup>
-          )}
+          )} */}
         </HStack>
 
-        <div className="menu-icon" onClick={handleClick}>
-          <HamburgerIcon boxSize={'9'} />
-        </div>
+        <Box
+          className="menu-icon"
+          onClick={handleClick}
+          display={{ base: 'block', sm: 'none' }}
+        >
+          <HamburgerIcon boxSize="9" />
+        </Box>
 
-        {/* Display different menu options based on login status */}
-        {/* if user is not logged in */}
-        {!user.isLoggedIn && (
-          <ul className={hamburgerIconStatus ? 'menu-list' : 'menu-list close'}>
-            <li>
-              <NavLink to={'/'} onClick={onLoginModalForPartnerToggle}>
+        {!user.isLoggedIn ? (
+          <>
+            <HStack
+              as="ul"
+              className={hamburgerIconStatus ? 'menu-list' : 'menu-list close'}
+              listStyleType="none"
+              alignItems="flex-end"
+              display={{ base: 'none', sm: 'flex' }}
+              spacing={1}
+            >
+              <NavLink
+                to="/"
+                onClick={onLoginModalForPartnerToggle}
+                color="white"
+              >
                 {'For Partners'}
               </NavLink>
-            </li>
-            <li>
-              <NavLink to={'/'} onClick={onToggle}>
+              <NavLink to="/" onClick={onToggle} color="white">
                 {'About us'}
               </NavLink>
-            </li>
-            <li>
-              <NavLink to={'/'} onClick={onLoginModalToggle}>
-                {'Login/Singup'}
+              <NavLink to="/" onClick={onLoginModalToggle} color="white">
+                {'Login/Signup'}
               </NavLink>
-            </li>
-          </ul>
-        )}
-        <Modal
-          onClose={onLoginModalToggle}
-          size={{ base: 'full', sm: '2xl' }}
-          isOpen={isLoginModalOpen}
-          isCentered
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalBody p={0}>
-              <LoginUser
-                handleSuccessfulLoginUser={handleSuccessfulLoginUser}
-              />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-        <Modal
-          onClose={onLoginModalForPartnerToggle}
-          size={{ base: 'full', sm: '2xl' }}
-          isOpen={isLoginModalForPartnerOpen}
-          isCentered
-        >
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalBody p={0}>
-              <LoginPartner
-                handleSuccessfulLoginPartner={handleSuccessfulLoginPartner}
-              />
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-        {/* if user is logged in */}
-        {user.isLoggedIn && (
-          <>
-            <ul
-              className={hamburgerIconStatus ? 'menu-list' : 'menu-list close'}
+            </HStack>
+            <Modal
+              onClose={onLoginModalToggle}
+              size={{ base: 'full', sm: '2xl' }}
+              isOpen={isLoginModalOpen}
+              isCentered
             >
-              <li>
-                <NavLink to={'/'}>{'Home'}</NavLink>
-              </li>
-              <li>
-                <NavLink to={'/'}>{'Salons'}</NavLink>
-              </li>
-              <li>
-                <NavLink to={'/'} onClick={onToggle}>
-                  {'About us'}
-                </NavLink>
-              </li>
-              <li className="menu-icon">
-                <Text onClick={handleLogout} color={'accent.500'}>
-                  Logout
-                </Text>
-              </li>
-              <li>
-                {/* below div is for showing avatar icon and dropdownlist for the icon which is only in Desktop view */}
-                <div className="avatar-icon">
-                  <Box
-                    position="relative"
-                    bgSize={'xs'}
-                    onClick={handleProfile}
-                  >
-                    <Avatar
-                      name={user.firstName}
-                      src="https://bit.ly/broken-link"
-                      size={'sm'}
-                      onClick={() => setShow(!show)}
-                    />
-
-                    {/* Display dropdown with profile options when mouse hovers over the avatar or on click */}
-                    {show && (
-                      <Portal>
-                        <VStack
-                          position="absolute"
-                          top="63px"
-                          width="200px"
-                          background="primary"
-                          color={'white'}
-                          boxShadow="md"
-                          p="4"
-                          right={0}
-                          rounded="md"
-                          spacing="3"
-                          onMouseLeave={() => setShow(false)}
-                        >
-                          <Text
-                            onClick={() => handleUserNavigation('/userProfile')}
-                            cursor={'pointer'}
-                          >
-                            Profile
-                          </Text>
-                          <Text
-                            onClick={() => handleUserNavigation('/userProfile')}
-                            cursor={'pointer'}
-                          >
-                            Bookings
-                          </Text>
-                          <Text
-                            onClick={handleLogout}
-                            color={'accent.500'}
-                            cursor={'pointer'}
-                          >
-                            Logout
-                          </Text>
-                        </VStack>
-                      </Portal>
-                    )}
-                  </Box>
-                </div>
-              </li>
-            </ul>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+                <ModalBody p={0}>
+                  <LoginUser
+                    handleSuccessfulLoginUser={handleSuccessfulLoginUser}
+                  />
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+            <Modal
+              onClose={onLoginModalForPartnerToggle}
+              size={{ base: 'full', sm: '2xl' }}
+              isOpen={isLoginModalForPartnerOpen}
+              isCentered
+            >
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+                <ModalBody p={0}>
+                  <LoginPartner
+                    handleSuccessfulLoginPartner={handleSuccessfulLoginPartner}
+                  />
+                </ModalBody>
+              </ModalContent>
+            </Modal>
           </>
+        ) : (
+          <HStack
+            as="ul"
+            className={hamburgerIconStatus ? 'menu-list' : 'menu-list close'}
+            listStyleType="none"
+            alignItems="flex-end"
+            display={{ base: 'none', sm: 'flex' }}
+            spacing={1}
+          >
+            <NavLink to="/" color="white">
+              {'Home'}
+            </NavLink>
+            <NavLink to="/" color="white">
+              {'Salons'}
+            </NavLink>
+            <NavLink to="/" onClick={onToggle} color="white">
+              {'About us'}
+            </NavLink>
+            <Text color="accent.500" onClick={handleLogout} cursor="pointer">
+              Logout
+            </Text>
+            <Box
+              className="avatar-icon"
+              position="relative"
+              bgSize="xs"
+              onClick={handleProfile}
+            >
+              <Avatar
+                name={user.firstName}
+                src="https://bit.ly/broken-link"
+                size="sm"
+                onClick={() => setShow(!show)}
+              />
+              {show && (
+                <Portal>
+                  <VStack
+                    position="absolute"
+                    top="63px"
+                    width="200px"
+                    bg="primary"
+                    color="white"
+                    boxShadow="md"
+                    p="4"
+                    right={0}
+                    rounded="md"
+                    spacing="3"
+                    onMouseLeave={() => setShow(false)}
+                  >
+                    <Text
+                      onClick={() => handleUserNavigation('/userProfile')}
+                      cursor="pointer"
+                    >
+                      Profile
+                    </Text>
+                    <Text
+                      onClick={() => handleUserNavigation('/userProfile')}
+                      cursor="pointer"
+                    >
+                      Bookings
+                    </Text>
+                    <Text
+                      onClick={handleLogout}
+                      color="accent.500"
+                      cursor="pointer"
+                    >
+                      Logout
+                    </Text>
+                  </VStack>
+                </Portal>
+              )}
+            </Box>
+          </HStack>
         )}
-      </nav>
-
+      </Box>
       {/* this slide is for about us section */}
       <Slide direction="bottom" in={isOpen} style={{ zIndex: 10 }}>
         <Box
