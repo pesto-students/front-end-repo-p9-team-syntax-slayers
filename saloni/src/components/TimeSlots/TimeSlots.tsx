@@ -1,4 +1,4 @@
-import { Box, Text, Flex, Button } from '@chakra-ui/react';
+import { Box, Text, Flex, Button,useBreakpointValue } from '@chakra-ui/react';
 import React, { useState, useEffect } from 'react';
 import { DateAndTime, Slots } from '../DateSlots/DateSlots';
 
@@ -6,6 +6,7 @@ interface TimeSlotsProps {
   dateSeleted: DateAndTime | null;
   salonId: string;
   totalServiceTime: number;
+  onSlotsSelected?: (selectedSlots: number[]) => void; 
 }
 
 const TimeSlots: React.FC<TimeSlotsProps> = (props) => {
@@ -13,8 +14,9 @@ const TimeSlots: React.FC<TimeSlotsProps> = (props) => {
   const { dateSeleted, totalServiceTime } = props;
   const [selectedStartIndex, setSelectedStartIndex] = useState<number | null>(null);
   const [selectedLastIndex, setSelectedLastIndex] = useState<number | null>(null);
-
+  const [noOfSlotsSelected,setNoOfSlotsSelected] = useState<number[] | []>([])
   const [slots, setSlots] = useState<Slots[] | []>([]);
+  const view = useBreakpointValue({ base: "360px", sm: "400px" })
 
   useEffect(() => {
     if (dateSeleted) {
@@ -41,6 +43,11 @@ const TimeSlots: React.FC<TimeSlotsProps> = (props) => {
    
   const handleBookingTime = (index:number)=> {
     if (canBookTime(index)) {
+      let indexArray=[]
+        for(let i=index;i<index+slotsRequired;i++){
+             indexArray.push(i)
+             setNoOfSlotsSelected(indexArray)
+        }
         setSelectedStartIndex(index);
         setSelectedLastIndex(index + slotsRequired - 1);
       } else {
@@ -50,13 +57,11 @@ const TimeSlots: React.FC<TimeSlotsProps> = (props) => {
 
   useEffect(() => {
     if (selectedStartIndex !== null && selectedLastIndex !== null) {
-     
-        const startSlotValue = slots[selectedStartIndex];
-      const lastSlotValue = slots[selectedLastIndex];
-
-      console.log("Start Slot Value:", startSlotValue);
-      console.log("Last Slot Value:", lastSlotValue);
-
+   
+      noOfSlotsSelected.forEach((i)=>console.log(slots[i]))
+      if (props.onSlotsSelected) { 
+        props.onSlotsSelected(noOfSlotsSelected);
+    }
       
     }
   }, [selectedStartIndex, selectedLastIndex]);
@@ -80,6 +85,8 @@ const TimeSlots: React.FC<TimeSlotsProps> = (props) => {
           {time.avaliableForBooking?time.slot:'Booked'}
         </Button>
       ))}
+             {/* <Button width={{base:'100%', md:"50%",sm:"10%"}} h={{base:"40px",sm:"70px"}} variant={useBreakpointValue({ base: "solid", sm: "outline" })} bg={{ base: "accent.500", sm: "white" }} color={{ base: "white", sm: "accent.500" }} colorScheme={useBreakpointValue({ base: "accent.500", sm: "white" })} mb={{base:"5",sm:"10"}}>Book Now</Button> */}
+
     </Flex>
   );
 }

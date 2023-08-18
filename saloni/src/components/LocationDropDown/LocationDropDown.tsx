@@ -31,7 +31,7 @@ const LocationDropdown: React.FC<LocationDropdownProps> = ({
         color={'black'}
         borderColor={'grey'}
         height="48px"
-        w={'auto'}
+        w={{base:'300px',sm:'250px'}}
         maxW={'300px'}
       >
         <Flex justify="space-between" align="center" width="100%">

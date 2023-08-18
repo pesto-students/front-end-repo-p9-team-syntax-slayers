@@ -7,7 +7,7 @@ import { SelectedServiceDummyList } from "../../components/SelectedServiceCard/H
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { DateAndTime } from "../../components/DateSlots/DateSlots";
 const FinalSelection = () => {
   
   const view = useBreakpointValue({ base: "360px", sm: "400px" })
@@ -30,6 +30,13 @@ const FinalSelection = () => {
   const handleGoBack=()=> {
      navigate(`/`)
   }
+
+  const handleSelectedDateSlots = (selectedDateSlots: DateAndTime | null) => {
+    // Handle the data from child here
+    console.log("Received Date and Time slots from child:", selectedDateSlots);
+    // Use the data as needed
+};
+
 
   const checkoutHandler = async()=>{
      
@@ -63,7 +70,7 @@ const FinalSelection = () => {
       console.log('Order Data from BE:', data.data);
       console.log('Razorpay Options:', options);
       
-            const rzp1 = new (window as any).Razorpay(options);
+            const rzp1 = new (window as any).Razorpay(options);     
             rzp1.open();
 
             }
@@ -85,7 +92,7 @@ const FinalSelection = () => {
             return <SelectedServiceCard key={index} salon_id={item.salon_id} id={item.id} name={item.name} duration={item.duration} price={item.price} description={item.description}/>;
           })}
         </Flex>
-        {view=="360px" && <DateSlots salonId="1"  totalTime={totalTime}/> }
+        {view=="360px" && <DateSlots onDateSlotSelected={handleSelectedDateSlots}  salonId="1"  totalTime={totalTime}/> }
         <TotalCostAndDetails />
       </Flex>
       </Box>
@@ -93,7 +100,7 @@ const FinalSelection = () => {
 
       <Box padding={{base:"5",sm:"10"}} pb={{sm:"0"}}>
       <HStack>
-       {view=="400px" &&   <DateSlots salonId={'1'} totalTime={totalTime} />} 
+       {view=="400px" &&   <DateSlots  onDateSlotSelected={handleSelectedDateSlots} salonId={'1'} totalTime={totalTime} />} 
       
        <Button onClick={checkoutHandler} width={{base:'100%', md:"50%",sm:"10%"}} h={{base:"40px",sm:"70px"}} variant={useBreakpointValue({ base: "solid", sm: "outline" })} bg={{ base: "accent.500", sm: "white" }} color={{ base: "white", sm: "accent.500" }} colorScheme={useBreakpointValue({ base: "accent.500", sm: "white" })} mb={{base:"5",sm:"10"}}>Book Now</Button>
        </HStack>

@@ -133,6 +133,80 @@ const Navbar = () => {
           display={{ base: 'block', sm: 'none' }}
         >
           <HamburgerIcon boxSize="9" />
+          {hamburgerIconStatus&&user.isLoggedIn && (
+                <Portal>
+                  <VStack
+                    position="absolute"
+                    top="63px"
+                    width="200px"
+                    bg="primary"
+                    color="white"
+                    boxShadow="md"
+                    p="4"
+                    right={0}
+                    rounded="md"
+                    spacing="3"
+                    onMouseLeave={() => setShow(false)}
+                  >
+                    <Text
+                      onClick={() => handleUserNavigation('/userProfile')}
+                      cursor="pointer"
+                    >
+                      Profile
+                    </Text>
+                    <Text
+                      onClick={() => handleUserNavigation('/userProfile')}
+                      cursor="pointer"
+                    >
+                      Bookings
+                    </Text>
+                    <Text
+                      onClick={handleLogout}
+                      color="accent.500"
+                      cursor="pointer"
+                    >
+                      Logout
+                    </Text>
+                  </VStack>
+                </Portal>
+              )}
+              {hamburgerIconStatus&&!user.isLoggedIn && (
+                <Portal>
+                  <VStack
+                    position="absolute"
+                    top="63px"
+                    width="200px"
+                    bg="primary"
+                    color="white"
+                    boxShadow="md"
+                    p="4"
+                    right={0}
+                    rounded="md"
+                    spacing="3"
+                    onMouseLeave={() => setShow(false)}
+                  >
+                    <Text
+                      onClick={onLoginModalForPartnerToggle}
+                      cursor="pointer"
+                    >
+                      For Partners
+                    </Text>
+                    <Text
+                      onClick={onToggle}
+                      cursor="pointer"
+                    >
+                      About Us
+                    </Text>
+                    <Text
+                      onClick={onLoginModalToggle}
+                      color="accent.500"
+                      cursor="pointer"
+                    >
+                      Log In
+                    </Text>
+                  </VStack>
+                </Portal>
+              )}
         </Box>
 
         {!user.isLoggedIn ? (
@@ -143,7 +217,7 @@ const Navbar = () => {
               listStyleType="none"
               alignItems="flex-end"
               display={{ base: 'none', sm: 'flex' }}
-              spacing={1}
+              spacing={6}
             >
               <NavLink
                 to="/"
@@ -199,7 +273,7 @@ const Navbar = () => {
             listStyleType="none"
             alignItems="flex-end"
             display={{ base: 'none', sm: 'flex' }}
-            spacing={1}
+            spacing={6}
           >
             <NavLink to="/" color="white">
               {'Home'}

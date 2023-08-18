@@ -8,6 +8,7 @@ import {dummyData} from "./helper"
 interface DateSlotsProps{
   salonId:string
   totalTime:number
+  onDateSlotSelected?: (selectedDateSlots: DateAndTime | null) => void;
 }
 
 export interface Slots{
@@ -23,7 +24,7 @@ export interface DateAndTime{
   week:string
 }
 
-const DateSlots:React.FC<DateSlotsProps> = ({totalTime}) => {
+const DateSlots:React.FC<DateSlotsProps> = ({totalTime,onDateSlotSelected}) => {
     
     type DateTypeObject = {
         date: string;
@@ -32,7 +33,7 @@ const DateSlots:React.FC<DateSlotsProps> = ({totalTime}) => {
       
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
     const [dates,setDates] = useState<DateAndTime[] | []>([]);
-    const [slots,setSlots] = useState([])
+    const [finalDateAndTime,setFinalDateAndTime] = useState<DateAndTime | null>(null)
     const [selectedBox, setSelectedBox] = useState<number | null>(null); // New state to track the selected box
     const [selectedDate, setSelectedDate] = useState<DateAndTime | null>(null);
     const user = useAppSelector(state=>state.user)
@@ -55,7 +56,7 @@ const DateSlots:React.FC<DateSlotsProps> = ({totalTime}) => {
         .then((res)=>{
           console.log(res)
           setDates(res.data.data)
-         // setDates([dummyData])
+        //  setDates([dummyData])
         })
         .catch((err)=>{
           console.log(err)
@@ -68,12 +69,23 @@ const DateSlots:React.FC<DateSlotsProps> = ({totalTime}) => {
        setSelectedDate(item)
     }
   
-    // useEffect(()=>{
-       
-    //   const timeslots = dates.filter((item:DateAndTime)=>item?.day==selectedDate?.day)
-    //   console.log(timeslots,selectedDate)
-    // },[selectedDate])
-    console.log(totalServiceTime,totalTime)
+    
+    const handleSelectedSlots = (selectedSlots: number[]) => {
+     console.log(selectedSlots)
+     if(selectedDate) {
+      const updatedDate = {...selectedDate};
+      updatedDate.slots = selectedDate.slots.filter((item,index)=>selectedSlots.includes(index));
+     // setSelectedDate(updatedDate); // Set the updated date
+      setFinalDateAndTime(updatedDate); // Updating the finalDateAndTime
+   }
+        
+  };
+  useEffect(() => {
+    if (onDateSlotSelected && finalDateAndTime) {
+        onDateSlotSelected(finalDateAndTime);
+    }
+}, [finalDateAndTime]);
+
   return (
     <>
     <Box padding={{base:"10px",sm:"20px",md:"30px",lg:"40px"}} overflowY={'auto'}>
@@ -90,7 +102,7 @@ const DateSlots:React.FC<DateSlotsProps> = ({totalTime}) => {
           })}
         </Flex>
       </Box>
-      <TimeSlots dateSeleted={selectedDate} totalServiceTime={totalTime} salonId={"1"}/>
+      <TimeSlots onSlotsSelected={handleSelectedSlots} dateSeleted={selectedDate} totalServiceTime={totalTime} salonId={"1"}/>
     </Box> 
 
           </>
