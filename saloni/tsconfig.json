@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2021",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -18,5 +18,5 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src", "public"]
 }
