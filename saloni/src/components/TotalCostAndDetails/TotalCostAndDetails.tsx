@@ -26,7 +26,7 @@ const TotalCostAndDetails:React.FC<TotalCostAndDetailsProps> = () => {
   return (
     <Flex border={2} w={{ base: "100%", md: "500px" }} p={4} flexDirection={'column'} rounded={'md'} boxShadow={'lg'} bg={'white'} mb={2}>
       <HStack spacing={8}>
-        <Image src="https://static.magicpin.com/samara/media/blog/18-01-2022-best_salon_bangalore_cover.jpg" maxH="100px" maxW="180" rounded={10}/>
+        <Image src={cart.salon.imageUrl} maxH="100px" maxW="180" rounded={10}/>
         <VStack spacing={0}>
           <Heading fontSize={'xl'}>{cart.salon.salonName}</Heading>
           <Text>{cart.salon.location}</Text>

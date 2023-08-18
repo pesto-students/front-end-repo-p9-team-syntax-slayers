@@ -11,7 +11,7 @@ interface CartState {
   const initialState: CartState = {
     cartList: [],
     salonId:'',
-    salon:{salonName:'',location:'',gender:''}
+    salon:{salonName:'',location:'',gender:'',imageUrl:''}
   }
 
   export const cartSlice = createSlice({
@@ -38,6 +38,7 @@ interface CartState {
           state.salon.salonName=action.payload.salonName
           state.salon.location=action.payload.location
           state.salon.gender=action.payload.gender
+          state.salon.imageUrl=action.payload.imageUrl
       }
     }
   });

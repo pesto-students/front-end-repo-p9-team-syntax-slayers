@@ -15,9 +15,9 @@ const ReviewCard:React.FC<ReviewCardProps> = (props) => {
 
 
   return <>
-    <Box bg="white" p={5} shadow="md" rounded="md" w="full" maxW={{ base: "80%", md: "36%" }} m={'2'} minW={{base:"90%",sm:"30%"}}>
+    <Box bg="white" p={5} shadow="md" rounded="md" w="full" h={{base:240,sm:200}} maxW={{ base: "90%", md: "36%" }} m={'2'} minW={{base:"90%",sm:"30%"}}>
       <Flex direction={"row"} align={{ base: "center", md: "flex-start" }} mb={4}>
-        <Avatar name="Your Name" src="https://bit.ly/broken-link" />
+        <Avatar name={reviewerName} src="https://bit.ly/broken-link" />
         <Box ml={{base:4, md: 4 }}>
           <Text fontWeight="bold">{reviewerName}</Text>
           <Text color="gray.500">{reviewDate}</Text>

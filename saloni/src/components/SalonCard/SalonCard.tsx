@@ -53,7 +53,7 @@ const SalonCard: React.FC<SalonCardProps> = (props) => {
   const handleCardClick = () => {
       
       if(user.isLoggedIn){
-        const salon={salonName,location,gender}
+        const salon={salonName,location,gender,imageUrl}
         dispatch(addSalonDetails(salon))
         history(`/salonDetails/${id}`);
       }

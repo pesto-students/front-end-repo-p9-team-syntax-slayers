@@ -10,6 +10,7 @@ import {SalonDetails} from "../../components/CrudSalon/CrudSalon"
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 import { SalonService } from "../../components/CrudServices/CrudServices";
+import { DateAndTime , Slots} from "../../components/DateSlots/DateSlots";
 
 enum ServiceAction {
   SERVICES = "services",
@@ -23,6 +24,10 @@ const dashboardServices = () => {
   );
   const [salonDetails, setSalonDetails] = useState<SalonDetails | null>(null)
   const [servicesData, setServicesData] = useState<SalonService[] | null>(null);
+  const [date,setDate]=useState<DateAndTime | null>(null)
+  const [totalSlots, setTotalSlots] = useState(0)
+  const [totalBookings, setTotalBookings] = useState(0)
+  const [slotsAvailable, setSlotsAvailable] = useState(0)
 
   const user = useAppSelector(state=>state.user)
 
@@ -47,12 +52,42 @@ const dashboardServices = () => {
      console.log(err)
   })
   },[user])
+   
+  useEffect(()=>{
+         
+    const headers = {
+      'Authorization': `Bearer ${user.token}`,  // Bearer is a common convention, but your backend might expect something different.
+      'Content-Type': 'application/json',
+    };
+    
+    if(salonDetails?.id){
+    const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_TIME_SLOTS}${salonDetails?.id}`
+    axios.get(apiEndpoint,{headers})
+    .then((res)=>{
+      console.log(res.data.data[0])
+      setDate(res.data.data[0])
+    //  setDates([dummyData])
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+  }
+  },[salonDetails])
 
+  useEffect(()=>{
+     if(date){
+      const totalSlots = date.slots.length
+      const booking = date.slots.reduce((sum,item)=>!item.avaliableForBooking?sum+1:sum,0)
+      setTotalSlots(totalSlots)
+      setTotalBookings(booking)
+      setSlotsAvailable(totalBookings-booking)
+
+     }
+  },[date])
 
   const handleAllSalonService = (allSalonServices: SalonService[] | null) => {
     setServicesData(allSalonServices);
 };
-
   return (
     <>
       <Flex
@@ -132,16 +167,16 @@ const dashboardServices = () => {
                 direction={{base:"column",sm:"row"}}
                 w={{ base: "100%", sm: "100%" }}
                 mb={{ base: 3, sm: 0 }}
-                justifyContent={{base:"center",sm:'space-between'}}
+                justifyContent={{base:"center",sm:'space-around'}}
                 alignItems={{base:"center", sm:""}}
               >  
                 {/* values are hardcoded */}
-               <HStack ><Text color={"white"}fontSize={'lg'} >Total Bookings : </Text><Text color={'accent.500'}>8</Text> </HStack>
-               <HStack ><Text color={"white"}fontSize={'lg'} >Slots Available : </Text><Text color={'accent.500'}>2</Text> </HStack>
-               <HStack ><Text color={"white"}fontSize={'lg'} >TTotal Slots : </Text><Text color={'accent.500'}>10</Text> </HStack>
+               <HStack ><Text color={"white"}fontSize={'lg'} >Total Bookings : </Text><Text color={'accent.500'}>{totalBookings}</Text> </HStack>
+               <HStack ><Text color={"white"}fontSize={'lg'} >Slots Available : </Text><Text color={'accent.500'}>{slotsAvailable}</Text> </HStack>
+               <HStack ><Text color={"white"}fontSize={'lg'} >Total Slots : </Text><Text color={'accent.500'}>{totalSlots}</Text> </HStack>
               </Flex>
               <Box w={{ base: "100%", sm: "100%" }}>
-                <TimeSlots totalServiceTime={10} dateSeleted={null} salonId="11111" />
+                <TimeSlots totalServiceTime={0} dateSeleted={date} />
               </Box>
             </Flex>
 

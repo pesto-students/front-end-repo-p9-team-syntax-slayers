@@ -4,7 +4,7 @@ import { DateAndTime, Slots } from '../DateSlots/DateSlots';
 
 interface TimeSlotsProps {
   dateSeleted: DateAndTime | null;
-  salonId: string;
+  salonId?: string;
   totalServiceTime: number;
   onSlotsSelected?: (selectedSlots: number[]) => void; 
 }

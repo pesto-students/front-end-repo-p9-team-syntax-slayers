@@ -33,6 +33,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { addToList, emptyCart } from '../../redux/slices/cart';
 import { useParams } from 'react-router-dom';
+import AddReview from '../../components/AddReview/AddReview';
 
 interface SalonDetailsProps {}
 
@@ -41,7 +42,6 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
   const [filteredServiceList, setFilteredServiceList] = useState<
     ServiceCardProps[]
   >([]);
-  const [reviewersList, setReviewersList] = useState([]);
   const [activeButton, setActiveButton] = useState('');
   const [ratingNumber, setRatingNumber] = useState(0);
   const [loader, setLoader] = useState(false);
@@ -306,25 +306,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
               {ratingNumber}({reviewDummyData.length})
             </Text>
           </HStack>
-          <HStack
-            justifyContent={'flex-start'}
-            whiteSpace={'normal'}
-            overflowX="scroll"
-            flexWrap="nowrap"
-          >
-            {/* instead of reviewDummyData we will use reviewersList here */}
-            {reviewDummyData.map((item, index) => {
-              return (
-                <ReviewCard
-                  key={index}
-                  reviewerName={item.reviewerName}
-                  reviewDate={item.reviewDate}
-                  review={item.review}
-                  rating={item.rating}
-                />
-              );
-            })}
-          </HStack>
+          <AddReview salonId={salonId}/>         
         </Box>
       </Box>
     </>
