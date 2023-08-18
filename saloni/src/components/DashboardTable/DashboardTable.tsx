@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import {
     Table,
     Thead,
@@ -9,13 +9,21 @@ import {
     TableCaption,
     TableContainer,
   } from '@chakra-ui/react'
+  import { SalonService } from "../../components/CrudServices/CrudServices";
   import { tableDummyData } from './Helper'
 
  interface DashboardTableProps{
-  salonId:string
+  salonId:string | undefined;
+  servicesData: SalonService[] | null;
  } 
 
-const DashboardTable:React.FC<DashboardTableProps> = () => {
+const DashboardTable:React.FC<DashboardTableProps> = ({servicesData,salonId}) => {
+
+  useEffect(() => {
+    if (servicesData) {
+       console.log(servicesData)
+    }
+}, [servicesData]);
   return <>
   
   <TableContainer w={'80%'} boxShadow={"md"} mt={10}>
@@ -26,18 +34,16 @@ const DashboardTable:React.FC<DashboardTableProps> = () => {
         <Th fontSize={15}>Service</Th>
         <Th fontSize={15}>Price</Th>
         <Th fontSize={15}>Time Period</Th>
-        <Th fontSize={15}>Gender</Th>
-        <Th fontSize={15} isNumeric>Staff</Th>
+        <Th fontSize={15}>Featured</Th>
       </Tr>
     </Thead>
     <Tbody>
-      {tableDummyData.map((item,index)=>{
+      {servicesData?.map((item,index)=>{
        return       <Tr key={index}>
-       <Td>{item.service}</Td>
-       <Td>{item.price}</Td>
-       <Td>{item.timePeriod}</Td>
-       <Td>{item.gender}</Td>
-       <Td isNumeric>{item.staff}</Td>
+       <Td>{item?.name}</Td>
+       <Td>Rs. {item.price}/-</Td>
+       <Td>{item.duration} min</Td>
+       <Td>{item.featured?'Yes':'No'}</Td>
      </Tr> 
       })}
 

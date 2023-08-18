@@ -16,9 +16,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
 
 interface CrudServicesProps {
   salonId: string | undefined;
+  sendBackServices?: (allSalonServices:SalonService[] | null)=>void
 }
 
-interface SalonService{
+export interface SalonService{
 description:string
 duration:number
 featured:boolean
@@ -34,7 +35,7 @@ enum ServiceAction {
   DELETE_SERVICE = "deleteService",
 }
 
-const CrudServices: React.FC<CrudServicesProps> = ({salonId}) => {
+const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) => {
   const [activeButton, setActiveButton] = useState("");
   const { isOpen, onToggle } = useDisclosure();
   const [serviceName, setServiceName] = useState<string>("");
@@ -129,8 +130,13 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId}) => {
   }
 
   useEffect(()=>{
-    
+     
+    console.log(salonId)
+    if(salonId){
+
+   
     const apiEndpoint=`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_GET_SALON_SERVICES}${salonId}`
+    console.log(apiEndpoint)
     axios.get(apiEndpoint)
     .then((res)=>{
       console.log(res.data.data)
@@ -139,7 +145,14 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId}) => {
     .catch((err)=>{
       console.log(err)
     })
+  }
   },[salonId])
+
+  useEffect(()=>{
+    if (sendBackServices) {
+      sendBackServices(allServices);
+    }
+  },[allServices])
 
   const openService = (e:any)=>{
     console.log('openn',e.target.value)

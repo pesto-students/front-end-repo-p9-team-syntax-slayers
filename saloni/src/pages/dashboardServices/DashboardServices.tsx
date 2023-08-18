@@ -9,6 +9,7 @@ import CrudSalon from "../../components/CrudSalon/CrudSalon";
 import {SalonDetails} from "../../components/CrudSalon/CrudSalon"
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks/index";
+import { SalonService } from "../../components/CrudServices/CrudServices";
 
 enum ServiceAction {
   SERVICES = "services",
@@ -21,6 +22,8 @@ const dashboardServices = () => {
     ServiceAction.SERVICES.toString()
   );
   const [salonDetails, setSalonDetails] = useState<SalonDetails | null>(null)
+  const [servicesData, setServicesData] = useState<SalonService[] | null>(null);
+
   const user = useAppSelector(state=>state.user)
 
   const handleActiveButtons = (item: string) => {
@@ -44,6 +47,12 @@ const dashboardServices = () => {
      console.log(err)
   })
   },[user])
+
+
+  const handleAllSalonService = (allSalonServices: SalonService[] | null) => {
+    setServicesData(allSalonServices);
+};
+
   return (
     <>
       <Flex
@@ -102,8 +111,8 @@ const dashboardServices = () => {
     )}
         {ServiceAction.SERVICES == activeButton && (
           <>
-            <CrudServices salonId={salonDetails?.id} />
-            <DashboardTable salonId="1"  />
+            <CrudServices salonId={salonDetails?.id} sendBackServices={handleAllSalonService} />
+            <DashboardTable salonId={salonDetails?.id}  servicesData={servicesData}/>
           </>
         )}
 
