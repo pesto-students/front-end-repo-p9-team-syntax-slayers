@@ -124,7 +124,9 @@ const Landing = () => {
         }
 
         if (exploreSalonsResponse.status === 200) {
-          setExploreSalons(exploreSalonsResponse?.data?.data || []);
+          setExploreSalons(
+            exploreSalonsResponse?.data?.data?.nearBySalons?.nearBySalons || [],
+          );
         }
         setIsLoading(false);
       } catch (error) {
@@ -180,7 +182,9 @@ const Landing = () => {
         );
 
         if (exploreSalonsResponse.status === 200) {
-          setExploreSalons(exploreSalonsResponse?.data?.data || []);
+          setExploreSalons(
+            exploreSalonsResponse?.data?.data?.nearBySalons?.nearBySalons || [],
+          );
         }
         setIsLoading(false);
       }

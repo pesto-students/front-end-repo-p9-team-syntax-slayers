@@ -11,11 +11,6 @@ import {
 import React, { useEffect, useState } from 'react';
 import CarouselCard from '../../components/Carousel/Carousel';
 import SortByNav from '../../components/SortByNavBar/SortByNavBar';
-import { City, GeoAddress, Salon, longlat } from '../../global';
-import instance, { setAuthHeaders } from '../../API';
-import useGeolocation from '../../helper/geolocation';
-import { geocodeCoordinates } from '../../helper/geoCoding';
-import { useAppSelector } from '../../redux/hooks';
 
 const Listings = () => {
   const [selectedOption, setSelectedOption] = useState<string>('relevance');

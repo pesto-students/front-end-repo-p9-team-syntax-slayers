@@ -27,6 +27,7 @@ const SortByNav: React.FC<SortByNavProps> = ({
   onOptionClick,
 }) => {
   const [data, setData] = useState<Salon[]>([]);
+  const [salonCount, setSalonCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(9);
   const user = useAppSelector((state) => state.user);
@@ -45,14 +46,13 @@ const SortByNav: React.FC<SortByNavProps> = ({
         existingSalonIDs: existingSalonIds,
       };
 
-      console.log('reqBody', reqBody);
       const respData = await instance.post(
         `${process.env.REACT_APP_BASEURL}salon/nearBySalons`,
         reqBody,
       );
 
-      if (respData.data.data) {
-        const newSalons = respData.data.data;
+      if (respData?.data?.data) {
+        const newSalons = respData?.data?.data?.nearBySalons?.nearBySalons;
 
         // Extract unique salon IDs from the new data
         const newSalonIds = newSalons.map((salon: Salon) => salon.id);
@@ -66,6 +66,12 @@ const SortByNav: React.FC<SortByNavProps> = ({
           );
           return [...updatedData, ...newSalons];
         });
+
+        if (respData?.data?.data?.nearBySalons?.nearBySalons) {
+          setSalonCount(
+            respData?.data?.data?.nearBySalons?.nearBySalonsCount[0].count,
+          );
+        }
 
         setExistingSalonIds(uniqueSalonIds);
         setCount(uniqueSalonIds.length + 9);
@@ -117,7 +123,7 @@ const SortByNav: React.FC<SortByNavProps> = ({
     <VStack>
       <HStack justifyContent={'space-between'} w={'100%'} mb={'20px'}>
         <Box>
-          <Heading fontSize={['2xl', '3xl']}>95 Salons</Heading>
+          <Heading fontSize={['2xl', '3xl']}>{`${salonCount} Salons`}</Heading>
         </Box>
 
         <HStack>
