@@ -2,7 +2,6 @@ import { Box, Heading, Image } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import React, { useState, useEffect } from 'react';
 import { slides } from './Helper';
-import './Carousel.css';
 
 const CarouselCard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,7 +30,7 @@ const CarouselCard = () => {
       <Box
         as={'div'}
         w={'100%'}
-        h={['200px','400px']}
+        h={['200px', '400px']}
         m={'auto'}
         bg={''}
         position={'relative'}
