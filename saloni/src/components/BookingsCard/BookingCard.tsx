@@ -11,21 +11,19 @@ import {
   Divider,
 } from "@chakra-ui/react";
 import React from "react";
-
+import {BookedService} from "../../pages/userProfile/UserProfile"
 interface BookingCardProps{
 
   orderId:string,
   salonName:string,
   city:string,
   salonImageUrl:string,
-  bookingDate:string,
   bookingTime:string,
-  pricePaid:string,
-  services?:string[],
+  services?:BookedService[],
 }
 
 const BookingCard:React.FC<BookingCardProps> = (props) => {
-  const {orderId, salonName, city, salonImageUrl, bookingDate, bookingTime, pricePaid, services} = props
+  const {orderId, salonName, city, salonImageUrl, bookingTime, services} = props
   return (
     <>
       <Card
@@ -51,14 +49,10 @@ const BookingCard:React.FC<BookingCardProps> = (props) => {
            <Flex padding={'5px'}>
             <Box overflowY="auto" maxH={"180px"}>
               <VStack align="start" spacing={0}>
-                <Text fontSize={{base:"xs",sm:"sm"}} color='gray'>Order: #{orderId}</Text>
+                <Text fontSize={{base:"8",sm:"sm"}} color='gray'>Order: #{orderId}</Text>
                 <Heading fontSize={{base:"sm",sm:"md"}}>{salonName}</Heading>
                 <HStack spacing={5} mt={2}>
                   <VStack align="start" spacing={0}>
-
-                    <Text py="" fontSize={{base:"2xs", sm:"xs"}}>
-                      Date: {bookingDate}
-                    </Text>
                     <Text py="" fontSize={{base:"2xs", sm:"xs"}}>
                       Time: {bookingTime}
                     </Text>
@@ -68,13 +62,12 @@ const BookingCard:React.FC<BookingCardProps> = (props) => {
 
                   </VStack>
                   <VStack align="start" spacing={0}>
-                  <Text py="" fontSize={{base:"2xs", sm:"xs"}}>
-                      1.pedicure
-                    </Text>
+                   {services?.map((item,index)=>{
+                    return <Text key={index} py="" fontSize={{base:"2xs", sm:"xs"}}>
+                           {index+1}. {item.name} ({item.duration}m)
+                  </Text>
+                   })}
                     <Divider/>
-                    <Heading py="" fontSize={{base:"2xs", sm:"xs"}}>
-                      Paid: Rs.{pricePaid}
-                    </Heading>
                   </VStack>
                 </HStack>
               </VStack>

@@ -74,7 +74,7 @@ const TimeSlots: React.FC<TimeSlotsProps> = (props) => {
           key={index}
           variant={time.avaliableForBooking ? 'outline' : 'outline'} 
           isDisabled={!canBookTime(index)}
-          bg={'white'}
+          bg={index === selectedStartIndex ? 'lightgrey' : 'white'}
           h={{base:"40px",sm:"80px"}}
           w={{base:"70px",sm:"90px"}}
           m={1}

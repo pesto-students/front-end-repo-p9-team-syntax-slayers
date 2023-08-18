@@ -6,12 +6,41 @@ import BookingCard from "../../components/BookingsCard/BookingCard";
 //we are importing this for only dummy data..
 import { dummyData } from "../../components/BookingsCard/Helper";
 import { useAppSelector } from "../../redux/hooks";
+import FavSalonDetails from "../../components/FavSalonCard/FavSalonCard"
+
+interface OrderDetails {
+  banner: string;
+  bookedServices: BookedService[];
+  orderID: string;
+  salonAddress: string;
+  salonName: string;
+  startTime: string;
+}
+
+export interface BookedService {
+  name: string;
+  duration: number;
+}
+
+
+export interface MyFavSalonData {
+  salonName: string;
+  salonAddress: string;
+  openFrom: string;
+  openTill: string;
+  currentlyInactive: number;
+  banner: null | string;
+  rating: number;
+  ratingCount: number;
+}
 const UserProfile = () => {
-  const [activeButton, setActiveButton] = useState("");
+  const [activeButton, setActiveButton] = useState("bookings");
   const user  = useAppSelector(state=>state.user)
+  const [upcomingBookings, setUpcomingBookings] = useState<OrderDetails[]>()
+  const [pastBookings, setPastBookings] = useState<OrderDetails[]>()
+  const [favourites, setFavourites] = useState<MyFavSalonData[]>()
 
   const handleActiveButton = (id: string) => {
-    console.log("clicked", dummyData);
     setActiveButton(id);
     console.log(activeButton);
   };
@@ -26,6 +55,8 @@ const UserProfile = () => {
     axios.get(apiEndpoint1,{headers})
     .then((res)=>{
       console.log(res)
+      setUpcomingBookings(res.data.data[0].upcomingBookings)
+      setPastBookings(res.data.data[0].pastBookings)
     })
     .catch((err)=>{
       console.log(err)
@@ -35,12 +66,14 @@ const UserProfile = () => {
     axios.get(apiEndpoint2,{headers})
     .then((res)=>{
       console.log(res)
+      setFavourites(res.data)
     })
     .catch((err)=>{
       console.log(err)
     })
 
   },[user.userId])
+  console.log(upcomingBookings)
   return (
     <>
       <Flex
@@ -114,7 +147,55 @@ const UserProfile = () => {
             Favourites
           </Button>
         </Flex>
-        <Box
+
+       {activeButton == "bookings" && <Box
+          w={{ base: "100%", sm: "70%" }}
+          bg={"white"}
+          borderTop={{ sm: "1px" }}
+          borderRight={"1px"}
+          borderBottom={"1px"}
+          borderRightRadius={10}
+          overflowY={"auto"}
+          maxHeight={{base:"100vh",sm:"80vh"}}
+        >
+          <Heading fontSize={30} m={5}>
+            Upcoming Bookings
+          </Heading>
+          {/* we will real data which will be fetched from API this dummyData is just a dummy */}
+        {upcomingBookings?.length!==0? upcomingBookings?.map((item, index) => {
+            return (
+              <BookingCard
+                key={index}
+                orderId={item.orderID}
+                salonName={item.salonName}
+                city={item.salonAddress}
+                salonImageUrl={item.banner}
+                bookingTime={item.startTime}
+                services={item.bookedServices}
+              />
+            );
+          }): <Flex justifyContent={'flex-start'} p={7}><Text fontSize={'20'}>No List Found</Text></Flex> }
+        <Heading fontSize={30} m={5}>
+            Past Bookings
+          </Heading>
+          {/* we will real data which will be fetched from API this dummyData is just a dummy */}
+          {pastBookings?.length!==0? pastBookings?.map((item, index) => {
+            return (
+              <BookingCard
+                key={index}
+                orderId={item.orderID}
+                salonName={item.salonName}
+                city={item.salonAddress}
+                salonImageUrl={item.banner}
+                bookingTime={item.startTime}
+                services={item.bookedServices}
+              />
+            );
+          }): <Flex justifyContent={'flex-start'} p={7}><Text fontSize={'20'}>No List Found</Text></Flex> }
+        </Box>
+       }
+       {activeButton == "favourites" && <>
+       <Box
           w={{ base: "100%", sm: "70%" }}
           bg={"white"}
           borderTop={{ sm: "1px" }}
@@ -124,26 +205,22 @@ const UserProfile = () => {
           overflowY={"auto"}
           maxHeight={"80vh"}
         >
-          <Heading fontSize={30} m={5}>
-            Upcoming Bookings
-          </Heading>
-          {/* we will real data which will be fetched from API this dummyData is just a dummy */}
-          {dummyData.map((item, index) => {
+          
+          {Array.isArray(favourites) && favourites.length !== 0 ? favourites?.map((item, index) => {
             return (
-              <BookingCard
+              <FavSalonDetails
                 key={index}
-                orderId={item.orderId}
                 salonName={item.salonName}
-                city={item.city}
-                salonImageUrl={item.salonImageUrl}
-                bookingDate={item.bookingDate}
-                bookingTime={item.bookingTime}
-                pricePaid={item.pricePaid}
-                services={item.services}
+                salonAddress={item.salonAddress}
+                banner={item.banner || ''}
+                openFrom={item.openFrom}
               />
             );
-          })}
+          }): <Flex justifyContent={'flex-start'} p={7}><Text fontSize={'20'}>No List Found</Text></Flex> }
+
         </Box>
+          
+       </>}
       </Flex>
     </>
   );
