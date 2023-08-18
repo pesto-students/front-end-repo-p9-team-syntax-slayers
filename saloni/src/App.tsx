@@ -16,6 +16,7 @@ import DashboardServices from './pages/dashboardServices/DashboardServices';
 import PrivateRoute from './components/common/PrivateRoute/PrivateRoute';
 import Landing from './pages/landing/Landing';
 import Listings from './pages/listings/Listings';
+import NotFoundPage from './pages/PageNotFound/PageNotFount';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
         <Footer />
       </Router>
