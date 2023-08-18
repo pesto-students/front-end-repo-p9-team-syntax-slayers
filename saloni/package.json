@@ -13,8 +13,6 @@
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
     "axios": "^1.4.0",
     "framer-motion": "^10.13.0",
     "jwt-decode": "^3.1.2",
@@ -58,6 +56,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "copyfiles": "^2.4.1",

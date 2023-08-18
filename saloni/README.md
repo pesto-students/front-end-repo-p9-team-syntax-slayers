@@ -1,46 +1,60 @@
-# Getting Started with Create React App
+# Saloni - Salon Booking Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![Saloni Logo](https://res.cloudinary.com/coorgly/image/upload/v1692331129/logo-color_o6vjej.png)
 
-## Available Scripts
+Welcome to Saloni, the salon booking app that provides a seamless and user-friendly platform for customers to discover salons, explore available services, and easily book appointments in real time. The application also empowers salon owners and staff to efficiently manage their services, staff schedules, and keep track of bookings.
 
-In the project directory, you can run:
+## Table of Contents
 
-### `yarn start`
+- [Demo](#demo)
+- [Installation](#installation)
+- [Technology Stack](#technology-stack)
+- [Authors](#authors)
+- [License](#license)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Demo
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Experience the power of Saloni by visiting our live demo: [Saloni Demo](https://salonife.onrender.com/)
 
-### `yarn test`
+**Test Credentials:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **For Admin**
+  - Email: test@pestoproject.com
+  - Password: 123456
 
-### `yarn build`
+Please note that we recommend using Saloni in Google Chrome for the best experience.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+To install Saloni on your local machine, follow these steps:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repository: `git clone https://github.com/your-username/saloni.git`
+2. Navigate to the project directory: `cd saloni`
+3. Install dependencies: `npm install`
+4. Start the development server: `npm start`
 
-### `yarn eject`
+## Technology Stack
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Saloni leverages the following technology stack:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Typescript
+- React
+- Redux
+- Chakra UI
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Authors
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Saloni has been crafted with love and dedication by the following authors:
 
-## Learn More
+- Chethan Rao S
+- Sidhanth Kamble
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+We are immensely proud of the hard work and creativity that went into building Saloni.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
+
+Saloni is released under the MIT License. For more details, please refer to the [LICENSE](https://github.com/your-username/saloni/blob/main/LICENSE) file.
+
+---
+
+Thank you for choosing Saloni! We hope you enjoy using our application. If you have any questions or feedback, please don't hesitate to reach out to us.
