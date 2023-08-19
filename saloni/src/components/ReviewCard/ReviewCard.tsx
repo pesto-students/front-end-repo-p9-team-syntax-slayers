@@ -22,10 +22,9 @@ const ReviewCard: React.FC<ReviewCardProps> = (props) => {
         rounded="md"
         w="full"
         h={{ base: 240, sm: 200 }}
-        maxW={{ base: '90%', md: '36%' }}
+        maxW={{ base: '90%', sm: '450' }}
         m={'2'}
-        minW={{ base: '90%', sm: '30%' }}
-        border={reviewAuthor === 1 ? '1px solid gold' : ''}
+        minW={{ base: '90%', sm: '350' }}
       >
         <Flex
           direction={'row'}

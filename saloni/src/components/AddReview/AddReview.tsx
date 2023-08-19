@@ -37,7 +37,7 @@ export interface Rating {
 export interface SalonRating {
   salonID: string;
   ratingAvg: number;
-  ratingCount: string; // This is a string based on your example, but consider making it a number if possible.
+  ratingCount: string; 
   ratings: Rating[];
   userHaveRated: 1 | 0;
 }
@@ -101,8 +101,8 @@ const AddReview: React.FC<AddReviewProps> = ({ salonId }) => {
     };
 
     if (salonId) {
-      const apiEndpoint = `${process.env.REACT_APP_BASEURL}/salon/ratings/${salonId}/${user?.userId}`;
-
+      const apiEndpoint = `${process.env.REACT_APP_BASEURL}salon/ratings/${salonId}/${user?.userId}`;
+     console.log(apiEndpoint)
       axios
         .get(apiEndpoint, { headers })
         .then((res) => {
@@ -113,7 +113,7 @@ const AddReview: React.FC<AddReviewProps> = ({ salonId }) => {
           console.log(err);
         });
     }
-  }, [salonId]);
+  }, [salonId,value]);
 
   return (
     <Box ml={0} mt={20}>
@@ -132,7 +132,7 @@ const AddReview: React.FC<AddReviewProps> = ({ salonId }) => {
           </HStack>
         </VStack>
 
-        {reviewersList?.userHaveRated === 0 && (
+        { (true) && (
           <>
             <HStack justifyContent={'space-between'} w={'90%'}>
               <Stack spacing={0}>
@@ -172,13 +172,14 @@ const AddReview: React.FC<AddReviewProps> = ({ salonId }) => {
             />
           </>
         )}
-
-        <HStack
+      </VStack>
+      <HStack
           justifyContent={'flex-start'}
           whiteSpace={'normal'}
           overflowX="scroll"
           flexWrap="nowrap"
           mt={3}
+          ml={4}
         >
           {reviewersList?.ratings?.map((item, index) => {
             return (
@@ -193,7 +194,6 @@ const AddReview: React.FC<AddReviewProps> = ({ salonId }) => {
             );
           })}
         </HStack>
-      </VStack>
     </Box>
   );
 };
