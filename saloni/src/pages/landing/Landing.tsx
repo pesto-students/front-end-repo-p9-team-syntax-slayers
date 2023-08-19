@@ -31,6 +31,11 @@ import { setGeoAddress, setUserLocation } from '../../redux/slices/user';
 import useGeolocation from '../../helper/geolocation';
 import MyUpcomingBookingCard from '../../components/MyUpcomingBookingCard/MyUpcomingBookingCard';
 
+const deviceType = getDeviceType();
+const isMobileIOS =
+  deviceType.device === 'Mobile' &&
+  /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 const Landing = () => {
   const [exploreSalons, setExploreSalons] = useState<Salon[]>([]);
   const [upComingBookings, setUpComingBookings] = useState<BookingInfo[]>([]);
@@ -274,43 +279,62 @@ const Landing = () => {
               <>
                 <Box maxH="60%" maxW={['85vw', '90vw']}>
                   {Array.isArray(upComingBookings) &&
-                    upComingBookings.length > 0 && (
-                      <HStack spacing={4}>
-                        {upComingBookings.map((myBooking) => (
-                          <MyUpcomingBookingCard
-                            key={myBooking.orderID}
-                            banner={myBooking.banner}
-                            orderID={myBooking.orderID}
-                            salonName={myBooking.salonName}
-                            startTime={myBooking.startTime}
-                            salonAddress={myBooking.salonAddress}
-                            bookedServices={myBooking.bookedServices}
-                          />
-                        ))}
-                      </HStack>
-                    )}
-
-                  {Array.isArray(upComingBookings) &&
-                    upComingBookings.length === 0 && (
-                      <VStack
-                        align="center"
-                        justify="center"
-                        spacing={3}
-                        p={5}
-                        borderWidth="1px"
-                        borderRadius="lg"
-                        borderColor="gray.300"
-                        backgroundColor="gray.100"
-                        textAlign="center"
-                        minHeight="200px"
-                      >
-                        <Icon as={WarningIcon} boxSize={10} color="gray.500" />
-                        <Text fontSize="lg" fontWeight="bold">
-                          No Upcoming Booking
-                        </Text>
-                        {/* <Text>Please check back later.</Text> */}
-                      </VStack>
-                    )}
+                  upComingBookings.length > 1 ? (
+                    <>
+                      {isMobileIOS && (
+                        <ScrollableCardList
+                          cardWidth={'300px'}
+                          visibleCards={1}
+                        >
+                          {upComingBookings.map((myBooking) => (
+                            <MyUpcomingBookingCard
+                              key={myBooking.orderID}
+                              banner={myBooking.banner}
+                              orderID={myBooking.orderID}
+                              salonName={myBooking.salonName}
+                              startTime={myBooking.startTime}
+                              salonAddress={myBooking.salonAddress}
+                              bookedServices={myBooking.bookedServices}
+                            />
+                          ))}
+                        </ScrollableCardList>
+                      )}
+                      {!isMobileIOS && (
+                        <HStack spacing={4}>
+                          {upComingBookings.map((myBooking) => (
+                            <MyUpcomingBookingCard
+                              key={myBooking.orderID}
+                              banner={myBooking.banner}
+                              orderID={myBooking.orderID}
+                              salonName={myBooking.salonName}
+                              startTime={myBooking.startTime}
+                              salonAddress={myBooking.salonAddress}
+                              bookedServices={myBooking.bookedServices}
+                            />
+                          ))}
+                        </HStack>
+                      )}
+                    </>
+                  ) : (
+                    <VStack
+                      align="center"
+                      justify="center"
+                      spacing={3}
+                      p={5}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      borderColor="gray.300"
+                      backgroundColor="gray.100"
+                      textAlign="center"
+                      minHeight="200px"
+                    >
+                      <Icon as={WarningIcon} boxSize={10} color="gray.500" />
+                      <Text fontSize="lg" fontWeight="bold">
+                        No Upcoming Booking
+                      </Text>
+                      {/* <Text>Please check back later.</Text> */}
+                    </VStack>
+                  )}
                 </Box>
               </>
             )}

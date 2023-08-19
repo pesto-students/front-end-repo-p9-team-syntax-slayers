@@ -31,12 +31,13 @@ const ScrollableCard: React.FC<ScrollableCardProps> = ({
           disabled={scrollPosition === 0}
           onClick={() => handleScroll(-1)}
           leftIcon={<ChevronLeftIcon />}
+          w={'20px%'}
         />
 
         <Box flex="1" overflow="hidden">
           <Stack
             direction="row"
-            spacing="4"
+            spacing="2"
             transform={`translateX(-${
               scrollPosition * (parseInt(cardWidth) + 8)
             }px)`}
@@ -49,6 +50,7 @@ const ScrollableCard: React.FC<ScrollableCardProps> = ({
           disabled={scrollPosition === maxScrollPosition}
           onClick={() => handleScroll(1)}
           rightIcon={<ChevronRightIcon />}
+          w={'20px%'}
         />
       </Flex>
     </Box>
