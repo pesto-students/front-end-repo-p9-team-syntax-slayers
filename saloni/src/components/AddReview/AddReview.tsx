@@ -101,9 +101,8 @@ const AddReview: React.FC<AddReviewProps> = ({ salonId }) => {
     };
 
     if (salonId) {
-      const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_GET_ALL_REVIEWS}${salonId}/${user?.userId}`;
+      const apiEndpoint = `${process.env.REACT_APP_BASEURL}/salon/ratings/${salonId}/${user?.userId}`;
 
-      console.log('apiEndpoint', apiEndpoint);
       axios
         .get(apiEndpoint, { headers })
         .then((res) => {
