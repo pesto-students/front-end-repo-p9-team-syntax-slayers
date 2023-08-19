@@ -326,15 +326,15 @@ const [imageUrl, setImageUrl] = useState<string>("");
         )}
         {activeButton === ServiceAction.SALON_DETAILS && (
 
-            <Flex wrap={'wrap'} direction={'column'} justifyContent={'center'} alignItems={'start'} pl={{base:0,sm:20}} pb={{base:0,sm:10}}>
+            <Flex wrap={'wrap'} direction={'column'} justifyContent={'center'} alignItems={'start'} pl={{base:5,sm:20}} pb={{base:5,sm:10}}>
 
-             <Text fontSize={19} color={'white'}>Name: {salonDetails?.name}</Text>
-             <Text fontSize={19} color={'white'}>Description: {salonDetails?.description}</Text>
-             <Text fontSize={19} color={'white'}>Contact: {salonDetails?.contact_number}</Text>
-             <Text fontSize={19} color={'white'}>Gender: {salonDetails?.gender}</Text>
-             <Text fontSize={19} color={'white'}>Address: {salonDetails?.address}</Text>
-             <Text fontSize={19} color={'white'}>City: {cities.filter((item) => item.id === salonDetails?.city_id)[0]?.name}</Text>
-
+            <HStack> <Text fontSize={19} fontWeight={{base:'bold',sm:'semibold'}} color={'white'}>Name: </Text><Text fontSize={19} color={'white'}>{salonDetails?.name}</Text></HStack>
+            <HStack> <Text fontSize={19} fontWeight={{base:'bold',sm:'semibold'}} color={'white'}>Description: </Text><Text fontSize={19} color={'white'}>{salonDetails?.description}</Text></HStack>
+            <HStack> <Text fontSize={19} fontWeight={{base:'bold',sm:'semibold'}} color={'white'}>Contact: </Text><Text fontSize={19} color={'white'}>{salonDetails?.contact_number}</Text></HStack>
+            <HStack> <Text fontSize={19} fontWeight={{base:'bold',sm:'semibold'}} color={'white'}>Gender: </Text><Text fontSize={19} color={'white'}>{salonDetails?.gender}</Text></HStack>
+            <HStack> <Text fontSize={19} fontWeight={{base:'bold',sm:'semibold'}} color={'white'}>Address:</Text><Text fontSize={19} color={'white'}>{salonDetails?.address}</Text></HStack>
+            <HStack> <Text fontSize={19} fontWeight={{base:'bold',sm:'semibold'}} color={'white'}>City: </Text><Text fontSize={19} color={'white'}>{cities.filter((item) => item.id === salonDetails?.city_id)[0]?.name}</Text></HStack>
+           
             </Flex>
             
 

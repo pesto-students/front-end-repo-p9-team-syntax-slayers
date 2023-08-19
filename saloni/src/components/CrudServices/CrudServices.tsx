@@ -38,6 +38,7 @@ enum ServiceAction {
 const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) => {
   const [activeButton, setActiveButton] = useState("");
   const { isOpen, onToggle } = useDisclosure();
+  const [serviceId,setServiceId]=useState("");
   const [serviceName, setServiceName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [price, setPrice] = useState<string>("");
@@ -113,7 +114,8 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) =
       "duration": timePeriod,
       "featured": 1,
       "salon_id": salonId,
-      "treatment_tags": ["c96de68f-8e9f-4c2f-8a89-86719a7b73be"]
+      "treatment_tags": ["c96de68f-8e9f-4c2f-8a89-86719a7b73be"],
+      "service_id":serviceId
     }
 
     const apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_UPDATE_SERVICE}`
@@ -159,12 +161,13 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) =
     const service = allServices.filter((item)=>item.id==e.target.value)[0]
     console.log(service)
     setSelectToUpdate(service)
-
+    setServiceId(e.target.value)
     setServiceName(service.name);
     setDescription(service.description);
     setPrice(service.price.toString());  // Assuming `price` is stored as a number, convert to string
     setTimePeriod(service.duration.toString());
   }
+
   return (
     <Box
       w={{ base: "350px", sm: "900px" }}
@@ -336,11 +339,18 @@ const CrudServices: React.FC<CrudServicesProps> = ({salonId,sendBackServices}) =
               </Button>
             </Flex>
           )}
-
-
+      
          </>
         )}
-
+         
+         {activeButton===ServiceAction.DELETE_SERVICE &&(
+                      <Select placeholder='Select option' bg={'white'} width={'50%'} m={4} onChange={(e) => openService(e)}>
+                      {allServices.map((item,index)=>{
+                        return   <option key={index} value={item.id}>{item.name} </option>
+                      })}
+          
+                  </Select>
+            )}
       </Collapse>
     </Box>
   );

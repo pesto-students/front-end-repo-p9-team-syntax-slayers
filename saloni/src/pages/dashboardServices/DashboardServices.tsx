@@ -17,6 +17,18 @@ enum ServiceAction {
   BOOKINGS = "bookings",
   SALONDETAILS = "salonDetails"
 }
+interface Booking {
+  bookingId: string;
+  userId: string;
+  customerName: string;
+  StartTime: string;
+  paymentConfirmed: boolean;
+  services: Service[];
+}
+
+export interface Service {
+  name: string;
+}
 
 const dashboardServices = () => {
   const [activeButton, setActiveButton] = useState(
@@ -28,6 +40,7 @@ const dashboardServices = () => {
   const [totalSlots, setTotalSlots] = useState(0)
   const [totalBookings, setTotalBookings] = useState(0)
   const [slotsAvailable, setSlotsAvailable] = useState(0)
+  const [bookingList, setBookingList] = useState<Booking[]>()
 
   const user = useAppSelector(state=>state.user)
 
@@ -71,6 +84,18 @@ const dashboardServices = () => {
     .catch((err)=>{
       console.log(err)
     })
+     
+    const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_SALONBOOKINGS_ADMIN}${salonDetails?.id}`
+    axios.get(apiEndpoint2,{headers})
+    .then((res)=>{
+      console.log(res)
+      setBookingList(res.data.data)
+
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
+
   }
   },[salonDetails])
 
@@ -80,7 +105,7 @@ const dashboardServices = () => {
       const booking = date.slots.reduce((sum,item)=>!item.avaliableForBooking?sum+1:sum,0)
       setTotalSlots(totalSlots)
       setTotalBookings(booking)
-      setSlotsAvailable(totalBookings-booking)
+      setSlotsAvailable(totalSlots-booking)
 
      }
   },[date])
@@ -181,15 +206,15 @@ const dashboardServices = () => {
             </Flex>
 
             <Flex wrap={"wrap"} justifyContent={"center"}>
-              {dummyData.map((item, index) => {
+              {Array.isArray(bookingList) && bookingList.map((item, index) => {
                 return (
                   <DashboardBookingDetailsCard
                     key={index}
                     customerName={item.customerName}
-                    time={item.time}
-                    service={item.service}
-                    gender={item.gender}
-                    status={item.status}
+                    time={item.StartTime}
+                    service={item.services}
+                    bookingId={item.bookingId}
+                    status={item.paymentConfirmed}
                   />
                 );
               })}
