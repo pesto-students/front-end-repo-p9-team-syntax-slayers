@@ -15,6 +15,10 @@ import {
   Box,
   Divider,
   Button,
+  Alert,
+  AlertTitle,
+  AlertDescription,
+  AlertIcon
 } from '@chakra-ui/react';
 import SelectedServiceCard, {
   SelectedServiceCardProps,
@@ -241,7 +245,19 @@ const FinalSelection = () => {
           <ModalContent>
             <ModalHeader>Booking Status</ModalHeader>
             <ModalCloseButton />
-            <ModalBody>Your Service Booking is {message} !</ModalBody>
+            <ModalBody>
+            
+            <Alert status='success'>
+      <AlertIcon />
+      <Box>
+        <AlertTitle>Success!</AlertTitle>
+        <AlertDescription>
+        Your Service Booking is {message} !
+        </AlertDescription>
+      </Box>
+    </Alert>
+            
+            </ModalBody>
 
             <ModalFooter>
               <Button
