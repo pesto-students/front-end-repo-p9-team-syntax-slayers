@@ -31,6 +31,7 @@ const SelectedServiceCard: React.FC<SelectedServiceCardProps> = (props) => {
   const dispatch = useAppDispatch();
   const [loader, setLoader] = useState(false);
   const user = useAppSelector((state) => state.user);
+  const cart = useAppSelector((state) => state.cart);
 
   const handleRemove = () => {
     console.log('removed', id);
@@ -51,7 +52,7 @@ const SelectedServiceCard: React.FC<SelectedServiceCardProps> = (props) => {
         setLoader(false);
       });
   };
-
+   
   return (
     <>
       <Box margin={'10px'}>

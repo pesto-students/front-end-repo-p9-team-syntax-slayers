@@ -24,7 +24,7 @@ interface CartState {
       },
       removeFromList: (state, action: PayloadAction<ServiceCardProps>) => { 
         const index = state.cartList.findIndex(item => item.id === action.payload.id);
-        if(state.cartList.length=1)
+        if(state.cartList.length===1)
         state.salonId=''
         if (index >= 0) {
           state.cartList.splice(index, 1);
