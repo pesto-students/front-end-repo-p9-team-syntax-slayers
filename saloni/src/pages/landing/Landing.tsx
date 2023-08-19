@@ -204,6 +204,7 @@ const Landing = () => {
     // You can update the state or perform any necessary actions here
   };
 
+  console.log('upComingBookings', upComingBookings);
   return (
     <>
       {/* Section 1 */}
@@ -277,30 +278,25 @@ const Landing = () => {
               <LoadingSpinner />
             ) : (
               <>
-                <Box maxH="60%" maxW={['85vw', '90vw']}>
+                <Box maxH="60%" maxW={['85vw', '90vw']} ml={'2px'}>
                   {Array.isArray(upComingBookings) &&
-                  upComingBookings.length > 1 ? (
+                  upComingBookings.length > 0 ? (
                     <>
-                      {isMobileIOS && (
-                        <ScrollableCardList
-                          cardWidth={'300px'}
-                          visibleCards={1}
-                        >
-                          {upComingBookings.map((myBooking) => (
-                            <MyUpcomingBookingCard
-                              key={myBooking.orderID}
-                              banner={myBooking.banner}
-                              orderID={myBooking.orderID}
-                              salonName={myBooking.salonName}
-                              startTime={myBooking.startTime}
-                              salonAddress={myBooking.salonAddress}
-                              bookedServices={myBooking.bookedServices}
-                            />
-                          ))}
-                        </ScrollableCardList>
-                      )}
+                      <ScrollableCardList cardWidth={'400px'} visibleCards={1}>
+                        {upComingBookings.map((myBooking) => (
+                          <MyUpcomingBookingCard
+                            key={myBooking.orderID}
+                            banner={myBooking.banner}
+                            orderID={myBooking.orderID}
+                            salonName={myBooking.salonName}
+                            startTime={myBooking.startTime}
+                            salonAddress={myBooking.salonAddress}
+                            bookedServices={myBooking.bookedServices}
+                          />
+                        ))}
+                      </ScrollableCardList>
 
-                      {!isMobileIOS && (
+                      {/* {getDeviceType().device === 'Desktop' && (
                         <ScrollableCardList
                           cardWidth={'300px'}
                           visibleCards={1}
@@ -317,7 +313,7 @@ const Landing = () => {
                             />
                           ))}
                         </ScrollableCardList>
-                      )}
+                      )} */}
                     </>
                   ) : (
                     <VStack

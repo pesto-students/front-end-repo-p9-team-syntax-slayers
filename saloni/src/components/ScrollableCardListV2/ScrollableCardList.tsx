@@ -42,7 +42,7 @@ const ScrollableCard: React.FC<ScrollableCardProps> = ({
 
   return (
     <Box width="100%" position="relative">
-      <Flex alignItems="center">
+      <Flex display={'flex'} flexDirection={'row'} alignItems="center">
         {scrollPosition > 0 && (
           <ChevronLeftIcon
             onClick={() => handleScroll(-1)}
