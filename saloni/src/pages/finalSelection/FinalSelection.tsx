@@ -47,6 +47,7 @@ const FinalSelection = () => {
   const [finalSlots, setFinalSlots] = useState<DateAndTime | null>();
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false)
 
   useEffect(() => {
     console.log(cart.cartList);
@@ -67,7 +68,15 @@ const FinalSelection = () => {
     setFinalSlots(selectedDateSlots);
     // Use the data as needed
   };
-
+  
+  useEffect(()=>{
+    if(user.userId&&finalSlots&&cart.salonId&&cart.cartList.length>0){
+      setIsDisabled(false)
+     }
+     else{
+      setIsDisabled(true)
+     }
+  },[user.userId,finalSlots,cart.salonId,cart.cartList])
   const checkoutHandler = async () => {
     setLoading(true);
     //This API is used to create OrderId
@@ -106,7 +115,7 @@ const FinalSelection = () => {
         setLoading(false);
         console.log(err);
       });
-
+  
     // console.log(payload)
     //  const {data} = orderData
     //  console.log(`${process.env.REACT_APP_BASEURL as string}${process.env.REACT_APP_RAZORPAY_VERIFICATION as string}`)
@@ -224,6 +233,7 @@ const FinalSelection = () => {
 
           <Button
             isLoading={loading}
+            isDisabled={isDisabled}
             onClick={checkoutHandler}
             width={{ base: '100%', md: '50%', sm: '10%' }}
             h={{ base: '40px', sm: '70px' }}
