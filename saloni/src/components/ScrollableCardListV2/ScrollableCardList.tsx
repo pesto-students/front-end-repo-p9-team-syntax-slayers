@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Button, Flex, Stack } from '@chakra-ui/react';
+import { Box, Flex, Stack } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { motion, useAnimation } from 'framer-motion';
 
 interface ScrollableCardProps {
   children: React.ReactNode[];
@@ -8,50 +9,86 @@ interface ScrollableCardProps {
   visibleCards: number;
 }
 
+const MotionBox = motion(Box);
+
 const ScrollableCard: React.FC<ScrollableCardProps> = ({
   children,
   cardWidth,
   visibleCards,
 }) => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const maxScrollPosition = children.length - visibleCards;
+  const maxScrollPosition = Math.max(0, children.length - visibleCards);
+  const controls = useAnimation();
 
-  const handleScroll = (scrollOffset: number) => {
+  const handleScroll = async (scrollOffset: number) => {
     const newPosition = Math.max(
       0,
       Math.min(scrollPosition + scrollOffset, maxScrollPosition),
     );
-    setScrollPosition(newPosition);
+
+    // Stop scrolling when reaching the end
+    if (newPosition === scrollPosition) {
+      return;
+    }
+
+    await setScrollPosition(newPosition);
+    await controls.start({ x: -newPosition * (parseInt(cardWidth) + 8) });
+  };
+
+  const handleCardClick = (index: number) => {
+    setScrollPosition(index);
+    controls.start({ x: -index * (parseInt(cardWidth) + 8) });
   };
 
   return (
-    <Box width="100%">
+    <Box width="100%" position="relative">
       <Flex alignItems="center">
-        <Button
-          disabled={scrollPosition === 0}
-          onClick={() => handleScroll(-1)}
-          leftIcon={<ChevronLeftIcon />}
-          w={'20px%'}
-        />
+        {scrollPosition > 0 && (
+          <ChevronLeftIcon
+            onClick={() => handleScroll(-1)}
+            position="absolute"
+            left="10px"
+            zIndex={1}
+            cursor="pointer"
+            boxSize={8} // Adjust the icon size as needed
+          />
+        )}
 
         <Box flex="1" overflow="hidden">
-          <Stack
-            direction="row"
-            spacing="2"
-            transform={`translateX(-${
-              scrollPosition * (parseInt(cardWidth) + 8)
-            }px)`}
-            transition="transform 0.3s ease-in-out"
+          <motion.div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              transition: 'transform 0.3s ease-out',
+              transform: `translateX(-${
+                scrollPosition * (parseInt(cardWidth) + 8)
+              }px)`,
+            }}
           >
-            {children}
-          </Stack>
+            {React.Children.map(children, (child, index) => (
+              <MotionBox
+                width={cardWidth}
+                onClick={() => handleCardClick(index)}
+                cursor="pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={controls}
+              >
+                {child}
+              </MotionBox>
+            ))}
+          </motion.div>
         </Box>
-        <Button
-          disabled={scrollPosition === maxScrollPosition}
-          onClick={() => handleScroll(1)}
-          rightIcon={<ChevronRightIcon />}
-          w={'20px%'}
-        />
+        {scrollPosition < maxScrollPosition && (
+          <ChevronRightIcon
+            onClick={() => handleScroll(1)}
+            position="absolute"
+            right="10px"
+            zIndex={1}
+            cursor="pointer"
+            boxSize={8} // Adjust the icon size as needed
+          />
+        )}
       </Flex>
     </Box>
   );
