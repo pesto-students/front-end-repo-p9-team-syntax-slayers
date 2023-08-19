@@ -93,7 +93,7 @@ const FinalSelection = () => {
       Authorization: `Bearer ${user.token}`,
       'Content-Type': 'application/json',
     };
-    const apiEndpointBooking = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_BOOK_SERVICE}${user.userId}`;
+    const apiEndpointBooking = `${process.env.REACT_APP_BASEURL}profile/bookService/${user.userId}`;
     axios
       .post(apiEndpointBooking, payload1, { headers })
       .then((res) => {
