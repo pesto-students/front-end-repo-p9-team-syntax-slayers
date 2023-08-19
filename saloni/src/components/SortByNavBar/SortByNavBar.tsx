@@ -123,7 +123,9 @@ const SortByNav: React.FC<SortByNavProps> = ({
     <VStack>
       <HStack justifyContent={'space-between'} w={'100%'} mb={'20px'}>
         <Box>
-          <Heading fontSize={['2xl', '3xl']}>{`${salonCount} Salons`}</Heading>
+          <Heading
+            fontSize={['2xl', '3xl']}
+          >{`${salonCount} Salons Near You`}</Heading>
         </Box>
 
         <HStack>

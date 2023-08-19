@@ -13,7 +13,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalContent,
-  ModalCloseButton
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { AiFillStar } from 'react-icons/ai';
 import React, { useEffect } from 'react';
@@ -48,10 +48,10 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
   const [showModal, setShowModal] = React.useState(false);
 
   const cart = useAppSelector((state) => state.cart);
-  const user = useAppSelector(state=>state.user)
+  const user = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
-  const currentSalonId = useAppSelector(state => state.cart.salonId);
-  const salonRedux = useAppSelector(state=>state.cart.salon)
+  const currentSalonId = useAppSelector((state) => state.cart.salonId);
+  const salonRedux = useAppSelector((state) => state.cart.salon);
   const history = useNavigate();
 
   const { salonId } = useParams();
@@ -81,7 +81,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       );
     }
   };
-  
+
   useEffect(() => {
     setActiveButton('Featured');
     setFilteredServiceList(serviceList.filter((item) => item.featured == 1));
@@ -106,9 +106,7 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
         setLoader(false);
       });
 
-    const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${
-      process.env.REACT_APP_CART_LIST
-    }${user.userId}`;
+    const apiEndpoint2 = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_CART_LIST}${user.userId}`;
     console.log(apiEndpoint2);
     // Make the GET request.
     axios
@@ -129,14 +127,14 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       });
   }, [salonId]);
 
-  useEffect(()=>{
-    console.log(cart)
+  useEffect(() => {
+    console.log(cart);
     if (currentSalonId && currentSalonId !== salonId) {
       setShowModal(true);
     } else {
-      setShowModal(false)
-    }  
-  },[cart])
+      setShowModal(false);
+    }
+  }, [cart]);
 
   useEffect(() => {
     let sum = 0;
@@ -150,20 +148,18 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
       /* instead of reviewDummyData we will use reviewersList here */
     }
     setRatingNumber(sum / reviewDummyData.length);
-    
   }, []);
 
-  const handleClearCart=()=>{
-    
-    let apiEndpoint=`${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_CLEAR_CART}`
-    axios.post(apiEndpoint,{"userId":user.userId})
-    .then((res)=>{
-      console.log(res)
-      dispatch(emptyCart())
-    })
-    .catch((error)=>console.log(error))
-
-  }
+  const handleClearCart = () => {
+    let apiEndpoint = `${process.env.REACT_APP_BASEURL}${process.env.REACT_APP_CLEAR_CART}`;
+    axios
+      .post(apiEndpoint, { userId: user.userId })
+      .then((res) => {
+        console.log(res);
+        dispatch(emptyCart());
+      })
+      .catch((error) => console.log(error));
+  };
   return (
     <>
       <Flex direction={'column'} bg={'primary'}>
@@ -278,36 +274,39 @@ const SalonDetails: React.FC<SalonDetailsProps> = (props) => {
           <Cart />
         </Flex>
         <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-  <ModalOverlay />
-  <ModalContent>
-    <ModalHeader>Warning</ModalHeader>
-    <ModalBody>
-      The service present in your cart is/are of another salon. Are you sure you want to clear the cart and switch?
-    </ModalBody>
-    <ModalFooter>
-      <Button variant="ghost" mr={3} onClick={() => {history(`/salonDetails/${currentSalonId}`); setShowModal(false)}}>
-        Go Back To Previous salon
-      </Button>
-      <Button color={'accent.500'} variant={'outline'} colorScheme="accent.500" onClick={() => {handleClearCart(); setShowModal(false)} }>
-        Confirm
-      </Button>
-    </ModalFooter>
-  </ModalContent>
-</Modal>
-        <Box ml={4} mt={20}>
-          <Heading fontSize={'xl'} mb={3}>
-            {' '}
-            Reviews
-          </Heading>
-          <HStack>
-            <AiFillStar size={24} color="gold" />
-            <Text>
-              {/* instead of reviewDummyData we will use reviewersList here */}
-              {ratingNumber}({reviewDummyData.length})
-            </Text>
-          </HStack>
-          <AddReview salonId={salonId}/>         
-        </Box>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Warning</ModalHeader>
+            <ModalBody>
+              The service present in your cart is/are of another salon. Are you
+              sure you want to clear the cart and switch?
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                variant="ghost"
+                mr={3}
+                onClick={() => {
+                  history(`/salonDetails/${currentSalonId}`);
+                  setShowModal(false);
+                }}
+              >
+                Go Back To Previous salon
+              </Button>
+              <Button
+                color={'accent.500'}
+                variant={'outline'}
+                colorScheme="accent.500"
+                onClick={() => {
+                  handleClearCart();
+                  setShowModal(false);
+                }}
+              >
+                Confirm
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <AddReview salonId={salonId} />
       </Box>
     </>
   );
