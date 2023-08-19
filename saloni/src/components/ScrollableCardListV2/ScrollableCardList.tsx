@@ -46,11 +46,12 @@ const ScrollableCard: React.FC<ScrollableCardProps> = ({
         {scrollPosition > 0 && (
           <ChevronLeftIcon
             onClick={() => handleScroll(-1)}
+            shadow={'2px'}
             position="absolute"
             left="10px"
             zIndex={1}
             cursor="pointer"
-            boxSize={8} // Adjust the icon size as needed
+            boxSize={12} // Adjust the icon size as needed
           />
         )}
 
@@ -70,7 +71,7 @@ const ScrollableCard: React.FC<ScrollableCardProps> = ({
                 width={cardWidth}
                 onClick={() => handleCardClick(index)}
                 cursor="pointer"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.95 }}
                 animate={controls}
               >
@@ -86,7 +87,7 @@ const ScrollableCard: React.FC<ScrollableCardProps> = ({
             right="10px"
             zIndex={1}
             cursor="pointer"
-            boxSize={8} // Adjust the icon size as needed
+            boxSize={12} // Adjust the icon size as needed
           />
         )}
       </Flex>

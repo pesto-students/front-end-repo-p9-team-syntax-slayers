@@ -299,21 +299,27 @@ const Landing = () => {
                           ))}
                         </ScrollableCardList>
                       )}
-                      {!isMobileIOS && (
-                        <HStack spacing={4}>
-                          {upComingBookings.map((myBooking) => (
-                            <MyUpcomingBookingCard
-                              key={myBooking.orderID}
-                              banner={myBooking.banner}
-                              orderID={myBooking.orderID}
-                              salonName={myBooking.salonName}
-                              startTime={myBooking.startTime}
-                              salonAddress={myBooking.salonAddress}
-                              bookedServices={myBooking.bookedServices}
-                            />
-                          ))}
-                        </HStack>
-                      )}
+
+                      {!isMobileIOS &&
+                        Array.isArray(upComingBookings) &&
+                        upComingBookings.length > 2 && (
+                          <ScrollableCardList
+                            cardWidth={'300px'}
+                            visibleCards={1}
+                          >
+                            {upComingBookings.map((myBooking) => (
+                              <MyUpcomingBookingCard
+                                key={myBooking.orderID}
+                                banner={myBooking.banner}
+                                orderID={myBooking.orderID}
+                                salonName={myBooking.salonName}
+                                startTime={myBooking.startTime}
+                                salonAddress={myBooking.salonAddress}
+                                bookedServices={myBooking.bookedServices}
+                              />
+                            ))}
+                          </ScrollableCardList>
+                        )}
                     </>
                   ) : (
                     <VStack
